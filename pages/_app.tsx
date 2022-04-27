@@ -1,8 +1,33 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import React, {ReactElement} from "react";
+import Head from "next/head";
+import type { NextComponentType } from 'next';
+import { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
+import { GlobalStyle } from "../styles/GlobalStyle";
+import { MainLayout } from "../components/Layout";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+
+const MyApp:NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({ Component, pageProps }: AppLayoutProps) => {
+  const getLayout =
+    Component.getLayout ||
+    ((page:ReactElement) => (
+      <MainLayout
+        {...pageProps}
+      >
+        {page}
+      </MainLayout>
+    ));
+
+  return (
+    <>
+    <Head>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      <meta charSet="UTF-8" />
+    </Head>
+    <GlobalStyle />
+    {getLayout(<Component {...pageProps} />)}
+    </>
+  )
+
 }
 
 export default MyApp

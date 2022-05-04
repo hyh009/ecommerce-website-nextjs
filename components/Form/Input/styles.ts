@@ -63,7 +63,7 @@ export const TransparentSelect = styled.select`
   flex:1;
   width:max(100%);
   border: none;
-  padding: 5px;
+  padding: 5px 2px;
   background:transparent ;
   cursor: pointer;
 

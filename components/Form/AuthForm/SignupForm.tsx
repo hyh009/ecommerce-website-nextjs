@@ -4,7 +4,7 @@ import {Button} from "../../Common";
 import {TransparentForm, Title, Notice} from "./styles";
 import {Col2T1Wrapper} from "../../Wrapper/styles";
 import {SignupSubmitHandler} from "../../../pages/signup";
-import {SignupInputsState} from "../../../types";
+import {SignupInputsState} from "../../../types/auth";
 import {MdOutlineCategory} from "react-icons/md";
 import {BsPencilSquare} from "react-icons/bs";
 import {AiOutlineEyeInvisible, AiOutlineMail} from "react-icons/ai";
@@ -20,6 +20,10 @@ const INITIAL_INPUTS = {
   passwordConfirmation:""
 }
 const GENDER_OPTIONS = [
+  {
+    value:"",
+    displayText:"請選擇性別",
+  },
   {
     value:"男",
     displayText:"男",
@@ -42,17 +46,18 @@ interface SignupFromProps {
 
 export interface ShowPasswordsState {
   password:boolean;
-  passwordConfirmation:boolean;
+  passwordConfirmation?:boolean;
 }
 
 const SignupForm:React.FC<SignupFromProps> = ({submitHandler}) => {
   const [inputs, setInputs] = useState<SignupInputsState>(INITIAL_INPUTS);
   const [showPasswords, setShowPasswords] = useState<ShowPasswordsState>({password:false,passwordConfirmation:false});
   const [loading, setLoading] = useState<boolean>(false);
+  const {name, username, email, password, passwordConfirmation} = inputs;
   const changeHandler = (e:React.ChangeEvent<HTMLInputElement>):void => {
     setInputs((prev)=>({...prev, [e.target.name]:e.target.value}))
   } 
-  
+  const emptyInput = Object.values({name, username, email, password, passwordConfirmation}).some((item:any)=>!Boolean(item)); 
   return (
     <TransparentForm onSubmit={(e)=>{submitHandler(e, inputs, setLoading)}}>
      <Title>註冊成為會員</Title>
@@ -100,7 +105,12 @@ const SignupForm:React.FC<SignupFromProps> = ({submitHandler}) => {
              setShowPasswords={setShowPasswords}/>
      </Col2T1Wrapper>
      <Notice>按下註冊鈕的同時，表示您已詳閱我們的資料使用政策與使用條款，同意使用 墊一店 所提供的服務並訂閱電子報。</Notice>
-     <Button type="submit" content="註冊" isDisable={loading} backgroundColor="var(--primaryColor)" color="black" alignSelf="flex-end"/>
+     <Button type="submit" 
+             content="註冊" 
+             isDisable={loading || emptyInput} 
+             backgroundColor="var(--primaryColor)" 
+             color="black" 
+             alignSelf="flex-end"/>
     </TransparentForm>
   )
 }

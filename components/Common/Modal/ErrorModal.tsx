@@ -1,27 +1,43 @@
-import React,{Dispatch,SetStateAction} from 'react';
-import {withModal} from "../../HOC/withModal";
-import {Button} from "../index";
+import React,{useEffect, Dispatch,SetStateAction} from 'react';
+import useControlDialog from '../../../utils/hooks/useControlDialog';
+import {FixedWidthButton} from "../index";
+import { ModalContainer } from './styles';
 import {  ModalHeader,ContentWrapper,Text } from './styles';
+import {AiOutlineClose} from "react-icons/ai";
 
 
 interface Props {
   errorMsg:string|null;
   setErrorMsg:Dispatch<SetStateAction<string | null>>;
   headerText?:string;
-  closeDialog?:()=>void;
+  showCloseIcon?:boolean; // true if need close icon
 }
 
-const ErrorModal:React.FC<Props> = ({errorMsg,  headerText, closeDialog}) => {
+const ErrorModal:React.FC<Props> = ({errorMsg, setErrorMsg, headerText, showCloseIcon}) => {
+  const {dialogRef, openDialog, closeDialog} = useControlDialog(setErrorMsg);
+
+  useEffect(()=>{
+    if(errorMsg){
+      openDialog();
+    }
+
+  },[errorMsg]);
 
   return (
-    <>
+    <ModalContainer ref={dialogRef} id="errorDialog" open={false}>
+       {showCloseIcon && <AiOutlineClose onClick={closeDialog}/>}
       <ModalHeader>{headerText || "Oops!發生了一點問題"}</ModalHeader>
       <ContentWrapper>
       <Text>{errorMsg}</Text>
-      <Button type="button" content="關閉" backgroundColor="var(--secondaryColor)" color="white" clickHandler={closeDialog}/>
+      <FixedWidthButton type="button" 
+                        content="關閉" 
+                        backgroundColor="var(--secondaryColor)" 
+                        color="white"
+                        width="30%" 
+                        clickHandler={closeDialog}/>
       </ContentWrapper>
-    </>
+    </ModalContainer>
   )
 }
 
-export default withModal(ErrorModal)
+export default ErrorModal;

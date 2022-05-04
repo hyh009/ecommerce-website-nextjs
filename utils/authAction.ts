@@ -1,4 +1,4 @@
-import { SignupInputsState } from "../types";
+import { SignupInputsState } from "../types/auth";
 import { axiosInstance } from "./config";
 // signup
 import catchError from "./catchError";

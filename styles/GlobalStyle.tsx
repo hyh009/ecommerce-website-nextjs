@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { devices } from "./responsive";
 
 export const GlobalStyle = createGlobalStyle`
 :root{
@@ -6,6 +7,10 @@ export const GlobalStyle = createGlobalStyle`
 --primaryColor:#ffa211;
 --secondaryColor:teal;
 --darkGray:#404040;
+--lightGray:#c0c0c0;
+--lightYellow:#faf6b9;
+--beige:#fafaf2;
+--navbarHeight:60px;
 }
 *{
     margin:0;
@@ -14,6 +19,28 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'Noto Sans TC', sans-serif;
     
 }
+
+a {
+  text-decoration:none;
+  color:black;
+}
+
+.swiper-pagination-bullet {
+  width: 15px;
+  height: 15px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 12px;
+  color: #000;
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.swiper-pagination-bullet-active {
+  color: #fff;
+  background: #3ecdcd;
+}
+
 
 ::-webkit-scrollbar {
   width: 10px;
@@ -32,5 +59,29 @@ export const GlobalStyle = createGlobalStyle`
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
+}
+
+@media ${devices.tabletL}{
+  --navbarHeight:50px;
+
+}
+
+@media ${devices.tablet}{
+  .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+}
+
+}
+
+@media ${devices.mobile}{
+  .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    transform:translateY(100%)
+}
+
+}
+
 }
 `

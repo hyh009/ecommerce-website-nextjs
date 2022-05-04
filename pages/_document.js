@@ -12,7 +12,7 @@ export default class MyDocument extends Document {
           />
           <link
             rel="shortcut icon"
-            href="/favicon.png"
+            href="/pad_logo.png"
             sizes="16*16"
             type="image/png"
           />

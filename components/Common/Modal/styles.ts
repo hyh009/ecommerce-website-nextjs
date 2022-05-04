@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { devices } from "../../../styles/responsive";
+import { scaleUp } from "../../../styles/animation";
 
 
 // modal
@@ -7,16 +8,21 @@ export const ModalContainer = styled.dialog`
     width:max(300px,35%);
     min-height:200px;
     border:none;
-    position: absolute;
+    position: fixed;
     left: 50%;
     top: 50%;
     border-radius:10px;
     overflow:hidden;
     transform: translate(-50%, -50%);
-    display:flex;
     flex-direction:column;
     align-items:center;
     justify-contents:space-between;
+    opacity:0;
+    transition:1s;
+
+    &[open]{
+        display: flex;
+    }
 
     &::backdrop{
         background: rgba(0,0,0,.8);
@@ -42,7 +48,7 @@ export const ContentWrapper = styled.div`
     margin:auto;
     gap:30px;
     width:100%;
-
+    padding:10px;
 
 `;
 
@@ -68,4 +74,5 @@ export const Text = styled.span`
     font-size:1.125rem;
     letter-spacing:1.5px;
     user-select:none;
+    text-align:center;
 `;

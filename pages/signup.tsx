@@ -3,11 +3,14 @@ import { SignupForm } from "../components/Form";
 import type { NextLayoutComponentType } from 'next';
 import Head from 'next/head'
 import {useRouter} from "next/router";
+import useToastr from "../utils/hooks/useToastr";
+import useAuth from "../utils/hooks/useAuth";
+import { BasicToastr } from "../components/Common/Toast";
 import { createUser } from "../utils/authAction";
 import styled from "styled-components";
 import { devices } from "../styles/responsive";
-import { PAGE_DESC, PAGE_TITLE } from '../utils/headContent';
-import { SignupInputsState } from "../types";
+import { PAGE_DESC, PAGE_TITLE } from '../utils/data/headContent';
+import { SignupInputsState } from "../types/auth";
 import ErrorModal from "../components/Common/Modal/ErrorModal";
 
 
@@ -20,26 +23,35 @@ export type SignupSubmitHandler = (e:React.FormEvent<HTMLFormElement>,
 const Signup: NextLayoutComponentType = () => {
   const [errorMsg, setErrorMsg] = useState<string|null>(null);
   const router = useRouter();
+  const showToastr = useToastr();
+  const authLoading = useAuth();
+
   const submitHandler:SignupSubmitHandler = async(e, inputData, setLoading):Promise<void>=>{
     e.preventDefault();
     setLoading(true);
     const {success, message} = await createUser(inputData);
     if(success){
       //toasttype notification here
-      router.push("/login");
+      showToastr("userCreated");
+      setTimeout(()=>router.push("/login"),3000);
     }else{
       setErrorMsg(message);
     }
     setLoading(false);
   }
   
+  if(authLoading){
+    return <div>Loading...</div>
+  }
+
     return (
       <>
         <Head>
           <title>{PAGE_TITLE.SIGNUP}</title>
           <meta name="description" content={PAGE_DESC.SIGNUP}></meta>
         </Head>
-        {errorMsg &&　<ErrorModal errorMsg={errorMsg as string} setErrorMsg={setErrorMsg}/>}
+        <BasicToastr/>
+        <ErrorModal errorMsg={errorMsg as string} setErrorMsg={setErrorMsg}/>
         <Container>
           <SignupForm submitHandler={submitHandler}/>
         </Container>

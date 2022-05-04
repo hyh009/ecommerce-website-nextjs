@@ -1,13 +1,12 @@
-import mongoose,{Schema,model, Model, Document} from "mongoose";
+import mongoose,{Schema, Document} from "mongoose";
 import bcrypt from "bcrypt";
-import {IUser} from "../types"
+import {IUser} from "../types/auth"
 
-interface IUserDocument extends IUser,Document { 
-  comparePassword(inputPassword: string, next: (err: Error|null, same: boolean|null) => void): void;
+export interface IUserDocument extends IUser,Document { 
+  comparePassword(inputPassword: string): Promise<boolean>;
 }
 
-
-const User:Schema<IUser> = new Schema(
+const UserSchema:Schema<IUserDocument> = new Schema(
   {
     name: {
       type: String,
@@ -31,7 +30,6 @@ const User:Schema<IUser> = new Schema(
       min: 6,
       max: 20,
       required: true,
-      select:false,
     },
     gender: {
       type: String,
@@ -84,14 +82,22 @@ const User:Schema<IUser> = new Schema(
 );
 
 
-User.methods.comparePassword = function (inputPassword:string, next: (err: Error|undefined, same: boolean|null)=>void ) {
-  bcrypt.compare(inputPassword, this.password, function(err:Error|undefined, isMatch:boolean){
-    if (err) {
-      return next(err, isMatch);
-    }
-    next(undefined, isMatch);
+UserSchema.pre<IUserDocument>("save", function (next) {
+  const user = this;
+  if (!user.isModified("password")) return next();
+
+  bcrypt.hash(user.password, 10, (err, hash) => {
+    if (err) throw err;
+    user.password = hash;
+    next();
   });
+});
+
+
+UserSchema.methods.comparePassword = async function (inputPassword:string):Promise<boolean>{
+  const isMatch = await bcrypt.compare(inputPassword,this.password);
+  return isMatch;
 };
 
-export default mongoose.models.User ||model("User", User);;
+export default mongoose.models.User || mongoose.model<IUserDocument>("User", UserSchema);
 

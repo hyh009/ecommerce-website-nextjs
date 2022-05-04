@@ -1,7 +1,7 @@
 import React,{Dispatch,SetStateAction} from 'react'
 import {InputContainer, IconContainer,Label, TransparentInput, TransparentSelect} from "./styles";
 import { IconSpinner } from '../../Common/Spinner';
-import {InputTypes} from "../../../types"
+import {InputTypes} from "../../../types/auth"
 import {IconType} from "react-icons"
 import {ShowPasswordsState} from "../AuthForm/SignupForm"
 

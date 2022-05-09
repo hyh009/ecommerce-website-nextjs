@@ -33,7 +33,7 @@ export type PriceType = {
 
 
 export interface IProduct {
-    _id?:string,
+    _id:string,
     name:string,
     title:string,
     desc:string,

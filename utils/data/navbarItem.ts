@@ -9,7 +9,7 @@ const navbarItem = [
     },
     {   
         navLinkText:"產品一覽/Products",
-        pathname:"/product"
+        pathname:"/products"
     },
     {   
         navLinkText:"聯繫我們/Contact",

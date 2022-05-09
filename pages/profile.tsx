@@ -1,11 +1,17 @@
-import React,{ReactElement} from 'react';
+import React,{ReactElement, useEffect} from 'react';
 import type { GetServerSidePropsContext, NextLayoutComponentType } from 'next';
 import { UserLayout } from '../components/Layout';
 import  withUserAuth  from '../components/HOC/withUserAuth';
+import { useSession } from "next-auth/react";
 import { Session } from 'next-auth';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { getCart } from '../store/reducer/cartReducer';
+
 
 
 const Profile:NextLayoutComponentType = () => {
+  const dispatch = useAppDispatch();
+  const cart = useAppSelector(state=>state.cart);
 
 
   return (

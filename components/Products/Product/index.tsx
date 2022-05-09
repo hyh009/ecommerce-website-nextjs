@@ -24,18 +24,18 @@ interface Props {
   product:IProduct
 }
 
-const Profuct:React.FC<Props> = ({product}) => {
+const Product:React.FC<Props> = ({product}) => {
   const {dialogRef,openDialog,closeDialog } = useControlDialog();
   return (
    <>
-    <AddCartModal dialogRef={dialogRef} closeDialog={closeDialog} showCloseIcon={true}/>
+    <AddCartModal dialogRef={dialogRef} closeDialog={closeDialog} showCloseIcon={true} product={product}/>
     <Container>
       <Title>{product.name}</Title>
       <ImageContainer>
         <Image src={product.imgs[0].src} alt={product.name} layout="fill" objectFit="cover" />
       </ImageContainer>
       <Info title={product.title}>
-        <Link href={`/products/${encodeURIComponent(product._id)}`} passHref>  
+        <Link href={`/products/${encodeURIComponent(product._id.toString())}`} passHref>  
          <ProductLink/>
         </Link>
         <IconContainer title="加入購物車" onClick={openDialog}>
@@ -50,4 +50,4 @@ const Profuct:React.FC<Props> = ({product}) => {
   )
 }
 
-export default Profuct;
+export default Product;

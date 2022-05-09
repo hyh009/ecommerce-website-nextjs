@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {AiOutlineClose} from "react-icons/ai";
 import { devices } from "../../../styles/responsive";
 import { scaleUp } from "../../../styles/animation";
 
@@ -17,28 +18,29 @@ export const ModalContainer = styled.dialog`
     flex-direction:column;
     align-items:center;
     justify-contents:space-between;
-    opacity:0;
-    transition:1s;
+    transition:0.4s;
+    z-index:5;
 
     &[open]{
-        display: flex;
+        display:flex;
     }
 
     &::backdrop{
         background: rgba(0,0,0,.8);
     }
-    svg {
-        position: absolute;
-        top:2px;
-        right:2px;
-        font-size:1.5rem;
-        color:white;
-        cursor:pointer;
-    }
 
     @media ${devices.mobile}{
         width:max(300px,90%);
     }
+`;
+
+export const CloseIcon = styled(AiOutlineClose)`
+     position: absolute;
+        top:2px;
+        right:2px;
+        font-size:1.5rem;
+        color:gray;
+        cursor:pointer;
 `;
 
 export const ContentWrapper = styled.div`
@@ -75,4 +77,9 @@ export const Text = styled.span`
     letter-spacing:1.5px;
     user-select:none;
     text-align:center;
+`;
+
+export const AddCartContainer = styled(ModalContainer)`
+    width:auto ;
+    padding:20px 10px;
 `;

@@ -31,7 +31,7 @@ const Home: NextPage<Props> = ({newProducts}) => {
         <H3Title>最新商品</H3Title>
         <Col4T3M2Wrapper pdRL="20px">
          {
-           newProducts.map((item)=>(<Product key={item._id} product={item}/>))
+           newProducts?.map((item)=>(<Product key={item._id} product={item}/>))
          }
         </Col4T3M2Wrapper>
       </HomeSession>

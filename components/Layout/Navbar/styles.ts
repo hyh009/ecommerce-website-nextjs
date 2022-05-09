@@ -171,3 +171,22 @@ export const MenuText = styled.div<MenuTextProps>`
   justify-content:center;
 `;
 
+export const Badge = styled.div`
+  width: 16px;
+  height: 16px;
+  display:flex ;
+  align-items:center;
+  justify-content:center;
+  background-color: red;
+  border-radius:50%;
+  color:white;
+  position:absolute;
+  top:0;
+  right:0;
+`;
+
+
+export const BadgeText = styled.span`
+   font-size:0.6rem;
+   font-weight:bold;
+`;

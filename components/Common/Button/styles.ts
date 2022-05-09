@@ -31,9 +31,10 @@ export const BasicButton = styled.button<ButtonProps>`
     letter-spacing:2.5px;
     font-size:${(props)=>props.fontSize || "1rem"};
     align-self:${(props)=>props.alignSelf?props.alignSelf:""};
-    
+    user-select:none;
+    transition:0.2s;
     &:hover{
-        transform: scale(1.05);
+        transform: translateY(-5%);
         opacity:0.8;
     }
 `;

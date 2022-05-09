@@ -8,3 +8,7 @@ export interface ForwardRefProps {
         href?:string;
         onClick?:React.MouseEventHandler<HTMLAnchorElement>
       }
+
+export interface Message {
+  message:string;
+}

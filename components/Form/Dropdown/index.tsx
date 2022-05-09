@@ -1,4 +1,4 @@
-import React,{useState, useRef} from 'react';
+import React,{useState, useRef, Dispatch, SetStateAction} from 'react';
 import {Container, Button, MenuContainer, Option} from "./styles";
 import { FlexRow } from '../../Wrapper/styles';
 import useClickOutsideClose from "../../../utils/hooks/useClickOutsideClose"
@@ -7,11 +7,12 @@ import useClickOutsideClose from "../../../utils/hooks/useClickOutsideClose"
 interface DropdownProps {
     title:string;
     options:string[];
-    clickHandler:(e:React.MouseEvent<HTMLDivElement>)=>void;
+    clickHandler:(e:React.MouseEvent<HTMLDivElement>, setItem: Dispatch<SetStateAction<string>>)=>void;
+    setItem:Dispatch<SetStateAction<string>>
     disable?:boolean[];
 
 }
-const Dropdown:React.FC<DropdownProps> = ({title, options, disable, clickHandler}) => {
+const Dropdown:React.FC<DropdownProps> = ({title, options, disable, clickHandler, setItem}) => {
     const [active, setActive] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     useClickOutsideClose(dropdownRef,setActive);
@@ -32,7 +33,7 @@ const Dropdown:React.FC<DropdownProps> = ({title, options, disable, clickHandler
                 }else{
                     return (
                         <Option key={index} 
-                                onClick={(e)=>clickHandler(e)}>
+                                onClick={(e)=>{clickHandler(e, setItem); setActive(false)}}>
                             {option}
                         </Option> 
                     )

@@ -30,7 +30,10 @@ export default NextAuth({
                 if(isMatch){
                     await db.disconnect();
                     // value to retrun 
-                    const user = { image:userDocument.profilePicUrl, email:userDocument.email, name:userDocument.name }
+                    const user = { image:userDocument.profilePicUrl, 
+                                   email:userDocument.email, 
+                                   name:userDocument.name,
+                                   _id:userDocument._id }
                     return user;   
                 }else{
                     await db.disconnect();
@@ -43,4 +46,19 @@ export default NextAuth({
         }
        })
     ],
+    // to add _id in session 
+    callbacks:{
+        jwt:({token,user})=>{
+            if(user){
+                token._id = user._id;
+            }
+            return token;
+        },
+        session:({session,token})=>{
+            if(token){
+                session.user._id = token._id as string;
+            }
+            return session;
+        }
+    },
 });

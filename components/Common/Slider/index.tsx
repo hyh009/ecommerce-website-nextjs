@@ -110,7 +110,7 @@ export const CategoriesSlider:React.FC = () => {
                     <Link href={{
                       pathname:"/products",
                       query:{
-                        categories:cat.name
+                        category:cat.name
                       }
                     }}>
                       <CatButton>SHOP NOW</CatButton>
@@ -143,7 +143,7 @@ export const ProductImgSlider:React.FC<ProductImgsProps> = ({imgs}) => {
       modules={[Navigation,Thumbs,EffectFade]}
       loop={true}
       effect="fade"
-      spaceBetween={10}
+      spaceBetween={20}
       slidesPerView={1}
       initialSlide={0}
       speed={300}
@@ -154,7 +154,7 @@ export const ProductImgSlider:React.FC<ProductImgsProps> = ({imgs}) => {
     >
     {
       imgs.map((img)=>(
-        <SwiperSlide>
+        <SwiperSlide key={img._id}>
           <ProductImgContainer>
             <Image src={img.src} alt={img.desc} layout="fill" objectFit="cover"/>
           </ProductImgContainer>
@@ -169,13 +169,13 @@ export const ProductImgSlider:React.FC<ProductImgsProps> = ({imgs}) => {
       style={{width:"100%"}}
       modules={[Thumbs]}
       onSwiper={setThumbsSwiper}
-      spaceBetween={10}
+      spaceBetween={5}
       slidesPerView={6}
       slideToClickedSlide={true}
       >
       {
           imgs.map((img)=>(
-            <SwiperSlide>
+            <SwiperSlide key={img._id}>
               <ThumbImgContainer>
                 <Image src={img.src} alt={img.desc} layout="fill" objectFit="cover"/>
               </ThumbImgContainer>

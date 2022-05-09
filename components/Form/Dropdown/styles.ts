@@ -11,6 +11,7 @@ interface OptionProps {
 export const Container = styled.div`
     position:relative;
     width:40%;
+    min-width:max-content;
 `;
 
 export const Button = styled.button<Props>`
@@ -24,6 +25,9 @@ export const Button = styled.button<Props>`
     font-size:1.125rem;
     letter-spacing:1px;
     cursor:pointer;
+    &:hover{
+        background-color:#eee;
+    }
 `;
 
 export const MenuContainer = styled.div<Props>`
@@ -37,6 +41,7 @@ export const MenuContainer = styled.div<Props>`
     transform:${(props)=>props.active?"translateY(0)":"translateY(-10px)"};
     pointer-events:${(props)=>props.active?"auto":"none"};
     transition: opacity 150ms ease-in, transform 150ms ease-in;
+    z-index:1;
 `;
 
 export const Option = styled.div<OptionProps>`

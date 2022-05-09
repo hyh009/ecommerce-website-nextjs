@@ -4,23 +4,49 @@ import {devices} from "../../styles/responsive"
 interface WrapperProps {
     pdRL?:string;
     gap?:string;
+    gapM?:string;
+    gapT?:string;
+    gapTL?:string;
 }
+
+export const CenterContainer = styled.div`
+    display: flex;
+    align-items:center;
+    justify-content:center;
+`
 
 
 export const FlexRow = styled.div<WrapperProps>`
     display:flex;
     align-items:center;
-    gap:${(props)=>props.gap?props.gap:"10px"}
-`
-
-export const FlexRowTCol = styled.div`
-    display:flex;
-    align-items:center;
-    @media ${devices.tablet}{
-        flex-direction:column;
+    gap:${(props)=>props.gap?props.gap:"10px"};
+    @media ${devices.tabletL}{
+      gap:${(props)=>props.gapTL?props.gapTL:"10px"};
     }
 `
 
+export const FlexRowTCol = styled.div<WrapperProps>`
+    display:flex;
+    align-items:center;
+    gap:${(props)=>props.gap?props.gap:"10px"};
+    @media ${devices.tablet}{
+        flex-direction:column;
+        gap:${(props)=>props.gapTL?props.gapTL:"10px"};
+    }
+`
+
+export const FlexRowMCol = styled.div<WrapperProps>`
+    display:flex;
+    align-items:center;
+    gap:${(props)=>props.gap?props.gap:"10px"};
+    @media ${devices.mobile}{
+        flex-direction:column;
+    }
+    @media ${devices.mobile}{
+        gap:${(props)=>props.gapM?props.gapM:"10px"};
+        align-items:flex-start;
+      }
+`
 
 export const FlexCol = styled.div`
     width:100%;
@@ -28,6 +54,12 @@ export const FlexCol = styled.div`
     display:flex;
     flex-direction:column;
 `;
+
+export const FlexBetween = styled.div`
+    display:flex;
+    justify-content:space-between;
+`;
+
 
 export const HomeSession = styled.div`
     padding:20px 0;
@@ -40,6 +72,18 @@ export const Col2T1Wrapper = styled.div`
     gap:10px;
     @media ${devices.tablet}{
         grid-template-columns:repeat(1,minmax(0,1fr));
+    }
+`;
+
+export const Col3T1Wrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    width: 100%;
+    padding: 20px;
+    gap: 20px;
+    @media ${devices.mobile}{
+        grid-template-columns:repeat(1,minmax(0,1fr));
+        gap: 50px;
     }
 `;
 

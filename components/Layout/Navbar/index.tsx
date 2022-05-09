@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import {Avator} from "../../Common";
 import {Container,Left,IconContainer,
   CompanySideMenu,CompanyMenuItem,CustomLink,Logos,LogoContainer,LogoTextContainer,
-  Right,Menuitem,MenuText} from "./styles";
+  Right,Menuitem,MenuText, Badge, BadgeText} from "./styles";
 import useClickOutsideClose from "../../../utils/hooks/useClickOutsideClose";
 import {AiOutlineClose,AiOutlineMenu,AiOutlineShoppingCart} from "react-icons/ai";
 import {IconType}from "react-icons";
@@ -15,7 +15,8 @@ import navbarItem from "../../../utils/data/navbarItem";
 
 
 interface Props {
-  position:"static"|"sticky"
+  position:"static"|"sticky";
+  cartNumber:number;
 }
 
 interface CompanyMenuListProps extends ForwardRefProps{
@@ -26,6 +27,7 @@ interface NavMenuProps extends ForwardRefProps {
   text?:string;
   Icon?:IconType;
   fontSize?:string;
+  cartNumber?:number;
 }
 
 const CompanyMenuList = React.forwardRef<HTMLAnchorElement,CompanyMenuListProps>(({href, onClick, navLinkText},ref)=>{
@@ -64,11 +66,15 @@ const Logo = React.forwardRef<HTMLAnchorElement,ForwardRefProps>(({href, onClick
 
 Logo.displayName = "Logo";
 
-const NavMenu = React.forwardRef<HTMLAnchorElement,NavMenuProps>(({href,onClick,text, Icon, fontSize},ref)=>{
+const NavMenu = React.forwardRef<HTMLAnchorElement,NavMenuProps>(({href,onClick,text, Icon, fontSize, cartNumber},ref)=>{
     return (
       <a ref={ref} href={href} onClick={onClick}>
         <Menuitem>
-          <MenuText fontSize={fontSize}>{text&&text}{Icon&&<Icon/>}</MenuText>
+          <MenuText fontSize={fontSize}>
+            {text&&text}
+            {Icon&&<Icon/>}
+            {cartNumber!==undefined && cartNumber>0 && <Badge><BadgeText>{cartNumber}</BadgeText></Badge>}
+          </MenuText>
         </Menuitem>
       </a>
     )
@@ -76,7 +82,7 @@ const NavMenu = React.forwardRef<HTMLAnchorElement,NavMenuProps>(({href,onClick,
 
 NavMenu.displayName = "NavMenu";
 
-const Navbar:React.FC<Props> = ({position}) => {
+const Navbar:React.FC<Props> = ({position, cartNumber}) => {
   const { data: session, status } = useSession()
   const [show, setShow] = useState<boolean>(false);
   const menuRef = useRef<HTMLUListElement>(null);
@@ -112,7 +118,7 @@ const Navbar:React.FC<Props> = ({position}) => {
       </Left>
       <Right>
         <Link href="/cart" passHref>
-           <NavMenu Icon={AiOutlineShoppingCart} fontSize="20px"/>
+           <NavMenu Icon={AiOutlineShoppingCart} cartNumber={cartNumber} fontSize="20px"/>
         </Link>
         {
           status==="unauthenticated" && 

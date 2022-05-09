@@ -2,7 +2,6 @@ import db from "../../../utilsServer/dbConnect";
 import User from "../../../models/User";
 import {signupValidation} from "../../../utilsServer/validations";
 import type { NextApiRequest, NextApiResponse } from 'next'
-import bcrypt from "bcrypt";
 import axios from "axios";
 
 async function handler(req:NextApiRequest, res:NextApiResponse){
@@ -22,7 +21,7 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
                 name,
                 username,
                 email,
-                password:bcrypt.hashSync(password,10),
+                password,
             });
             if(gender) newUser.gender = gender;
 
@@ -33,7 +32,7 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
         catch (error) {
             if(axios.isAxiosError(error)){
                 await db.disconnect();
-                return res.status(500).json({message:error.response?.data});
+                return res.status(400).json({message:error.response?.data});
             }
             res.status(500).json({message:"Server error"});
         }

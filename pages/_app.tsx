@@ -1,8 +1,11 @@
 import React, {ReactElement} from "react";
 import Head from "next/head";
 import Router from "next/router";
+import {wrapper} from "../store";
 import { SessionProvider } from "next-auth/react";
 import nProgress from "nprogress";
+// redux toolkit
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import type { NextComponentType } from 'next';
 import { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 import { GlobalStyle } from "../styles/GlobalStyle";
@@ -49,4 +52,4 @@ const MyApp:NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({ 
 
 }
 
-export default MyApp
+export default wrapper.withRedux(MyApp);

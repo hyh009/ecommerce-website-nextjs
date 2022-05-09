@@ -5,6 +5,7 @@ import { Dropdown } from '../../Form';
 import {PriceType, PatternType, ColorType} from "../../../types/product";
 import {AiOutlinePlus, AiOutlineMinus, AiOutlineClose} from "react-icons/ai";
 import { FlexRow } from '../../Wrapper/styles';
+import { serialize } from 'v8';
 
 
 
@@ -24,16 +25,16 @@ export const Notices:React.FC<NoticesProps> = ({notices}) => {
 
 interface ColorsProps {
     colors:ColorType[];
-    setSelectItem:Dispatch<SetStateAction<string>>;
-    selectItem:string;
+    setSelectedItem:Dispatch<SetStateAction<string>>;
+    selectedItem:string;
 }
 
-export const ColorSelect:React.FC<ColorsProps> = ({colors, setSelectItem, selectItem}) => {
+export const ColorSelect:React.FC<ColorsProps> = ({colors, setSelectedItem, selectedItem}) => {
     const disable = colors.map((color)=>!color.inStock);
     const clickHandler = (e:React.MouseEvent<HTMLDivElement>) => {
         const selectedDiv = e.target as  HTMLDivElement;
         const selectedColor = selectedDiv.title as string;
-        setSelectItem(selectedColor);
+        setSelectedItem(selectedColor);
     }
 
     return (
@@ -49,7 +50,7 @@ export const ColorSelect:React.FC<ColorsProps> = ({colors, setSelectItem, select
                     return (<FilterColor key={index} 
                               color={color.code} 
                               title={color.name}
-                              className={selectItem===color.name ? "color_active": ""}
+                              className={selectedItem===color.name ? "color_active": ""}
                               onClick={clickHandler} />)
                 }
               })
@@ -60,58 +61,62 @@ export const ColorSelect:React.FC<ColorsProps> = ({colors, setSelectItem, select
 
 interface PatternsProps {
     patterns: PatternType[];
-    setSelectItem:Dispatch<SetStateAction<string>>;
+    setSelectedItem:Dispatch<SetStateAction<string>>;
+    selectedItem: string;
 }
-export const PatternSelect:React.FC<PatternsProps> = ({patterns, setSelectItem}) => {
+export const PatternSelect:React.FC<PatternsProps> = ({patterns, setSelectedItem, selectedItem}) => {
     const options = patterns.map((pattern)=>pattern.name);
     const disable = patterns.map((pattern)=>!pattern.inStock);
-    const clickHandler = (e:React.MouseEvent<HTMLDivElement>) => {
+    const clickHandler = (e:React.MouseEvent<HTMLDivElement>, setItem:Dispatch<SetStateAction<string>>) => {
         const selectedDiv = e.target as  HTMLDivElement;
         const selectedpattern = selectedDiv.textContent as string;
-        setSelectItem(selectedpattern);
+        setItem(selectedpattern);
     }
     return (
-      <Dropdown title="請選擇樣式" options={options} disable={disable} clickHandler={clickHandler}/>
+      <Dropdown title={selectedItem?selectedItem:"請選擇樣式"} 
+                options={options} 
+                disable={disable} 
+                clickHandler={clickHandler}
+                setItem={setSelectedItem}/>
     )
   }
 
-interface PriceProps {
-    price:PriceType;
+interface DiscountPriceProps {
+    price:number;
+    discountPrice?:number;
+    size?:"small";
 }
 
-export const Price:React.FC<PriceProps> = ({price}) => {
-      if(price.current>0){
-          return (
-              <PriceContainer>
-                <NormalPrice>NT$ {price.origin}</NormalPrice>
-                <CurrentPrice>NT$ {price.origin}</CurrentPrice>
-              </PriceContainer>
-          )
-      }
-
-      return (
-          <OriginalPrice>NT$ {price.origin}</OriginalPrice>
-      )
-  }
+export const DiscountPrice:React.FC<DiscountPriceProps> = ({price,discountPrice,size}) => {
+    return (
+        <PriceContainer>
+          <NormalPrice size={size}>NT$ {price}</NormalPrice>
+          <CurrentPrice size={size}>NT$ {discountPrice}</CurrentPrice>
+        </PriceContainer>
+    )
+}
+interface PriceProps {
+    price:number;
+    size?:"small";
+}
+export const Price:React.FC<PriceProps> = ({price,size})=>{
+    return (
+        <OriginalPrice size={size}>NT$ {price}</OriginalPrice>
+    )
+}
 interface QuantityProps {
     quantity:number
-    setQuantity:Dispatch<SetStateAction<number>>;
+    handleCounter:(mode:"minus"|"plus", id?:string)=>void;
+    id?:string;
 }
-export const Quantity:React.FC<QuantityProps> = ({quantity, setQuantity}) => {
-    const handleCounter = (mode:"minus"|"plus"):void => {
-        if(mode==="minus"){
-            setQuantity((prev)=>(prev>1?prev-1:1));
-        }else if(mode==="plus"){
-            setQuantity((prev)=>(prev<20?prev+1:20))
-        }
-    }
+export const Quantity:React.FC<QuantityProps> = ({quantity, handleCounter, id}) => {
 
     return (
         <FlexRow>
             <AmountText>數量：</AmountText>
-            <IconContainer onClick={()=>handleCounter("minus")}><AiOutlineMinus/></IconContainer>
+            <IconContainer onClick={()=>handleCounter("minus", id)}><AiOutlineMinus/></IconContainer>
             <Amount>{quantity}</Amount>
-            <IconContainer onClick={()=>handleCounter("plus")}><AiOutlinePlus/></IconContainer>
+            <IconContainer onClick={()=>handleCounter("plus", id)}><AiOutlinePlus/></IconContainer>
         </FlexRow>
     )
 }

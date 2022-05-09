@@ -14,9 +14,12 @@ export const Container = styled.div<ContainerProps>`
   align-items: flex-start;
   padding: 20px;
   background-color: ${(props) => props.background?props.background:"white"};
+  @media ${devices.tabletL}{
+    padding:20px 10px;
+}
   @media ${devices.mobile}{
       flex-direction:column;
-      paading:0;
+      padding:0;
   }
 `;
 

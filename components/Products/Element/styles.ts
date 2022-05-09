@@ -3,6 +3,7 @@ import { devices } from "../../../styles/responsive";
 import {FlexRow} from "../../Wrapper/styles";
 
 
+
 export const NoticeContainer = styled.span`
 display: flex;
 flex-direction: column;
@@ -24,34 +25,38 @@ export const PriceContainer = styled(FlexRow)`
     gap:10px;
 `;
 
-export const OriginalPrice = styled.span`
-  font-size: 30px;
+interface PriceProps {
+    size?: "small";
+}
+
+export const OriginalPrice = styled.span<PriceProps>`
+  font-size: ${(props)=>props.size==="small"?"24px":"30px"};
   font-weight: 200;
   color: teal;
   letter-spacing: 1px;
   @media ${devices.tabletL}{
-      font-size:2rem;
+    font-size: ${(props)=>props.size==="small"?"24px":"30px"};
   }
 `;
 
-export const CurrentPrice = styled.span`
-  font-size: 30px;
+export const CurrentPrice = styled.span<PriceProps>`
+  font-size: ${(props)=>props.size==="small"?"24px":"30px"};
   font-weight: 200;
-  color: #d0312d;
+  color: #f8435e;
   letter-spacing: 1px;
   @media ${devices.tabletL}{
-      font-size:2rem;
+    font-size: ${(props)=>props.size==="small"?"24px":"30px"};
   }
 
 `;
 
-export const NormalPrice = styled.s`
-  font-size: 20px;
+export const NormalPrice = styled.s<PriceProps>`
+font-size: ${(props)=>props.size==="small"?"16px":"20px"};
   font-weight: 200;
   color: gray;
   letter-spacing: 1px;
   @media ${devices.tabletL}{
-      font-size:2rem;
+    font-size: ${(props)=>props.size==="small"?"16px":"20px"};
   }
 `;
 
@@ -121,11 +126,11 @@ export const Amount = styled.span`
   margin: 0 5px;
   user-select:none;
   @media ${devices.tabletL}{
-      font-size:2rem;
       padding:0 15px;
       border:2px solid var(--secondaryColor);
   }
 `;
+
 export const AmountText = styled.span`
     letter-spacing:1px;
 `;

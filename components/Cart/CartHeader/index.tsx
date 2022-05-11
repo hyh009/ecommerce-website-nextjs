@@ -8,9 +8,10 @@ import { FixedWidthButton } from '../../Common';
 
 interface Props {
     quantity:number;
+    type:"cart"|"wish"
 }
 
-const CartHeader:React.FC<Props> = ({quantity}) => {
+const CartHeader:React.FC<Props> = ({quantity, type}) => {
   const dispatch = useAppDispatch();
   const {data:session} = useSession();
 
@@ -27,20 +28,20 @@ const CartHeader:React.FC<Props> = ({quantity}) => {
     };
   return (
     <>
-      <Title>我的購物車</Title>
+      <Title>{type==="cart"?"我的購物車":"我的願望清單"}</Title>
       <Top>
-        <Link href="/products">
+        <Link href="/products" passHref>
             <CustomLink>
                 繼續購物
             </CustomLink>
         </Link>
         <TopTextContainer>
-            <Link href="/cart">
+            <Link href="/cart" passHref>
                 <TopText>
                     購物車中商品({quantity || 0})
                 </TopText>
             </Link>
-            <Link href="/wish">
+            <Link href="/wish" passHref>
                 <TopText>
                     我的願望清單
                 </TopText>
@@ -48,7 +49,7 @@ const CartHeader:React.FC<Props> = ({quantity}) => {
         </TopTextContainer>
         <FixedWidthButton type="button" 
                           content="清空購物車"
-                          clickHandler={cleanupCart} 
+                          clickHandler={type==="cart"?cleanupCart:undefined} 
                           backgroundColor="black"
                           color="white"
                           width="10%" />

@@ -21,7 +21,7 @@ const ErrorModal:React.FC<Props> = ({errorMsg, setErrorMsg, headerText, showClos
       openDialog();
     }
 
-  },[errorMsg]);
+  },[errorMsg,openDialog]);
 
   return (
     <ModalContainer ref={dialogRef} id="errorDialog" open={false}>

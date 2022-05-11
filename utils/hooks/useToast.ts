@@ -3,44 +3,44 @@ import { toast } from "react-toastify";
 
 type showToastrType = (toastName:string)=>void;
 
-const useToastr = ():showToastrType => {
-    const [toastrType, setToastrType] = useState<string>("");
-    const showToastr:showToastrType = (toastName) => {
-        setToastrType(toastName);
+const useToast = ():showToastrType => {
+    const [toastType, setToastType] = useState<string>("");
+    const showToast:showToastrType = (toastName) => {
+        setToastType(toastName);
     }
 
     useEffect(() => {
         let timer:any;
         // add product to cart
-        if (toastrType === "addToCart") {
+        if (toastType === "addToCart") {
           toast.info("成功加入購物車", {
             toastId: "addToCart",
           });
           // create post
-        } else if (toastrType === "cartDeleted") {
+        } else if (toastType === "cartDeleted") {
           toast.info("購物車已清空", {
             toastId: "cartDeleted",
           });
           // create order
-        } else if (toastrType === "orderCreated") {
+        } else if (toastType === "orderCreated") {
           toast.info("訂單成立", {
             toastId: "orderCreate",
           });
-        } else if (toastrType === "userCreated") {
+        } else if (toastType === "userCreated") {
             toast.info("註冊成功！將導向登入頁面", {
               toastId: "userCreated",
             });
-        } else if (toastrType === "login") {
+        } else if (toastType === "login") {
             toast.info("登入成功！將導入個人頁面", {
               toastId: "login",
             });
           }
-        timer = setTimeout(() => setToastrType(""), 1500);
+        timer = setTimeout(() => setToastType(""), 1500);
         return () => clearTimeout(timer);
-      }, [toastrType]);
+      }, [toastType]);
 
-      return showToastr;
+      return showToast;
 
 }
 
-export default useToastr;
+export default useToast;

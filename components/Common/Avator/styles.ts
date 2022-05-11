@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { devices } from "../../../styles/responsive";
 
 interface ImgContainerProps {
     size?:"auto"|"small";

@@ -50,3 +50,10 @@ export const modalFadein = keyframes`
     display:flex;
   }
 `;
+
+export const open = keyframes`
+  0% {transform:translateY(0%); opacity:1;}
+  30% {transform:translateY(-60%);  opacity:1;}
+  70% {transform:translateY(-30%); }
+  100% {transform:translateY(-100% ); opacity:0.9}
+`;

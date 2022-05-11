@@ -9,10 +9,16 @@ interface WrapperProps {
     gapTL?:string;
 }
 
-export const CenterContainer = styled.div`
+interface ContainerProps {
+    fill?:boolean;
+}
+
+export const CenterContainer = styled.div<ContainerProps>`
     display: flex;
     align-items:center;
     justify-content:center;
+    width:${(props)=>props.fill?"100%":"auto"};
+    height:${(props)=>props.fill?"100vh":"auto"};
 `
 
 
@@ -54,6 +60,7 @@ export const FlexCol = styled.div`
     display:flex;
     flex-direction:column;
 `;
+
 
 export const FlexBetween = styled.div`
     display:flex;

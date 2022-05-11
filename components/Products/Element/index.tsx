@@ -2,10 +2,9 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { Notice, NoticeContainer, PriceContainer, NormalPrice, OriginalPrice, CurrentPrice, 
     ColorContainer, FilterColor, IconContainer, Amount, AmountText } from './styles';
 import { Dropdown } from '../../Form';
-import {PriceType, PatternType, ColorType} from "../../../types/product";
+import {PatternType, ColorType} from "../../../types/product";
 import {AiOutlinePlus, AiOutlineMinus, AiOutlineClose} from "react-icons/ai";
 import { FlexRow } from '../../Wrapper/styles';
-import { serialize } from 'v8';
 
 
 

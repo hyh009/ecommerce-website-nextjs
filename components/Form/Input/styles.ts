@@ -51,6 +51,7 @@ export const TransparentInput = styled.input`
   padding: 5px;
   background:transparent ;
   letter-spacing:1px;
+  font-size:1rem;
 
   &:focus{
     outline: none;
@@ -66,6 +67,19 @@ export const TransparentSelect = styled.select`
   padding: 5px 2px;
   background:transparent ;
   cursor: pointer;
+  font-size:1rem;
 
 
+`;
+
+export const TransparentTextarea = styled.textarea`
+  flex:1;
+  width:max(100%);
+  resize:none;
+  border:none;
+  font-size:1rem;
+  padding:2px 5px;
+  &:focus {
+    outline: none;
+  }
 `;

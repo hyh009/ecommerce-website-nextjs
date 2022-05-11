@@ -1,5 +1,7 @@
 import React from 'react';
 import { NextPage } from 'next';
+import Head from 'next/head';
+import { PAGE_TITLE, PAGE_DESC } from '../utils/data/headContent';
 import styled from 'styled-components';
 import { devices } from '../styles/responsive';
 import Image from "next/image";
@@ -9,7 +11,11 @@ import { H3Title } from '../components/Title/styles';
 
 const About:NextPage = () => {
   return (
-    <>
+      <>  
+        <Head>
+          <title>{PAGE_TITLE.ABOUT}</title>
+          <meta name="description" content={PAGE_DESC.ABOUT}></meta>
+        </Head>
         <Session>
             <Image src={coverImg.src} 
                 alt={coverImg.alt}
@@ -27,7 +33,7 @@ const About:NextPage = () => {
         <CategoryInfo/>
         <H3Title>相關影片</H3Title>
         <Video/>        
-    </>
+      </>
   )
 }
 

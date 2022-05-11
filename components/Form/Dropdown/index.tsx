@@ -21,7 +21,7 @@ const Dropdown:React.FC<DropdownProps> = ({title, options, disable, clickHandler
         <Button type="button" onClick={()=>setActive((prev)=>!prev)} active={active}>{title}</Button>
         <MenuContainer active={active} ref={dropdownRef}>
         {
-            options.map((option,index)=>{
+            options?.map((option,index)=>{
 
                 if(disable && disable[index]){
                    return (

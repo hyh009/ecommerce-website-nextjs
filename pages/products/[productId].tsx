@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { axiosInstance } from '../../utils/config';
 import axios, { AxiosResponse } from "axios";
 import {Col2T1Wrapper} from "../../components/Wrapper/styles";

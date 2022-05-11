@@ -38,7 +38,7 @@ const Footer:React.FC = () => {
             socialLink.map((item,index)=>{
               const Icon:IconType = item.Icon;
               return (
-                <a href={item.link} key={index} target="_blank">
+                <a href={item.link} key={index} target="_blank" rel="noreferrer">
                   <IconContainer color={item.color}>
                     <Icon/>
                   </IconContainer>
@@ -53,7 +53,7 @@ const Footer:React.FC = () => {
         <ListContainer>
           {
             categories.map((cat,index)=>(
-              <Link href={cat.pathname} key={index}>
+              <Link href={cat.pathname} key={index} passHref>
                 <CatLink name={cat.name}/>
               </Link>
             ))

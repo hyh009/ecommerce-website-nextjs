@@ -62,6 +62,7 @@ font-size: ${(props)=>props.size==="small"?"16px":"20px"};
 
 export const ColorContainer = styled(FlexRow)`
     letter-spacing:1px;
+    flex-wrap:wrap;
 
 `;
 
@@ -86,14 +87,13 @@ export const FilterColor = styled.div<ColorProps>`
         transform: scale(1.1);
     }
     @media ${devices.tabletL}{
-        width:50px;
-        height:50px;
-        margin:8px;
-    }
-    @media ${devices.mobile}{
         width:40px;
         height:40px;
         margin:10px;
+    }
+    @media ${devices.mobile}{
+        width:30px;
+        height:30px;
     }
     
     &.color_active {

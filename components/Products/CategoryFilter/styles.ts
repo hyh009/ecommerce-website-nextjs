@@ -9,6 +9,9 @@ export const FilterContainer = styled.div`
   @media ${devices.tablet}{
       flex-direction:column;
   }
+  @media ${devices.mobile}{
+      padding: 10px;
+  }
 `;
 export const Filter = styled.div`
   display: flex;

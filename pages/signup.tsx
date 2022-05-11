@@ -1,9 +1,9 @@
 import {useState,ReactElement,Dispatch, SetStateAction} from "react";
 import { SignupForm } from "../components/Form";
 import type { NextLayoutComponentType } from 'next';
-import Head from 'next/head'
+import Head from 'next/head';
 import {useRouter} from "next/router";
-import useToastr from "../utils/hooks/useToastr";
+import useToastr from "../utils/hooks/useToast";
 import useAuth from "../utils/hooks/useAuth";
 import { BasicToastr } from "../components/Common/Toast";
 import { createUser } from "../utils/authAction";

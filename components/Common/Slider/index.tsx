@@ -54,7 +54,7 @@ export const HomeSlider:React.FC = () => {
                     <TextContainer>
                         <Title>{item.title}</Title>
                         <Description>{item.description}</Description>
-                        <Link href={`/products/${encodeURIComponent(item._id)}`}>
+                        <Link href={`/products/${encodeURIComponent(item._id)}`} passHref>
                             <LinkButton>{item.button}</LinkButton>
                         </Link>
                     </TextContainer>
@@ -107,7 +107,7 @@ export const CategoriesSlider:React.FC = () => {
                   <CustomImg src={cat.img} alt={cat.name} layout="fill" objectFit="cover"/>
                   <Info>
                     <CatName>{cat.name}</CatName>
-                    <Link href={{
+                    <Link passHref href={{
                       pathname:"/products",
                       query:{
                         category:cat.name

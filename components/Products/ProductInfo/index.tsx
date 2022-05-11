@@ -1,11 +1,12 @@
 import React,{useState} from 'react';
 import { InfoContainer, Title, Description } from './styles';
 import { Notices, Price, DiscountPrice, ColorSelect, PatternSelect, Quantity } from '../index';
-import {Button} from "../../Common";
+import {Button, ErrorModal, BasicToastr, ModalToastr} from "../../Common";
 import { useSession } from "next-auth/react";
 import { IProduct } from '../../../types/product';
 import { ICartProduct } from '../../../types/cart';
 import { useAppDispatch,useAppSelector } from '../../../store/hooks';
+import useToastr from "../../../utils/hooks/useToast";
 import {createCart, updateCart, updateNotLoginCart} from "../../../store/reducer/cartReducer";
 import { checkCart } from '../../../utils/cartAction';
 
@@ -16,15 +17,17 @@ interface Props {
 }
 
 const ProductInfo:React.FC<Props> = ({product, type}) => {
-    const [selectedItem, setSelectedItem] = useState(""); // store selected color or pattern
-    const [quantity, setQuantity] = useState(1);
+    const [selectedItem, setSelectedItem] = useState<string>(""); // store selected color or pattern
+    const [quantity, setQuantity] = useState<number>(1);
+    const [errorMsg, setErrorMsg] = useState<string|null>(null);
     const { data: session } = useSession();
     const dispatch = useAppDispatch();
-    const cart = useAppSelector(state=>state.cart); 
+    const cart = useAppSelector(state=>state.cart);
+    const showToastr = useToastr();
 
 
     const addToCart = () => {
-        if(!selectedItem || !quantity ) return alert("請選擇樣式"); 
+        if(!selectedItem) return setErrorMsg("請選擇樣式"); 
         const newCartItem:ICartProduct = {
             _id:product._id,
             color:product.colors? product.colors.filter((color)=>color.name===selectedItem)[0] : undefined,
@@ -35,10 +38,12 @@ const ProductInfo:React.FC<Props> = ({product, type}) => {
             // create new cart
             if(!session){
                 dispatch(updateNotLoginCart({products:[newCartItem]}));
+                showToastr("addToCart");
               }else{
                 dispatch(createCart({products:[newCartItem], 
                                      user:session.user._id, 
                                      quantity:1}));
+                showToastr("addToCart");
               }
            
         }else{
@@ -46,10 +51,12 @@ const ProductInfo:React.FC<Props> = ({product, type}) => {
             const noRepeatProducts = checkCart([...cart.products, newCartItem]);
             if(!session){
                 dispatch(updateNotLoginCart({products:noRepeatProducts}));
+                showToastr("addToCart");
               }else{
                 dispatch(updateCart({products:noRepeatProducts, 
                                      user:session.user._id, 
                                      quantity:noRepeatProducts.length}));
+                showToastr("addToCart");
               }
         }
     };
@@ -64,6 +71,10 @@ const ProductInfo:React.FC<Props> = ({product, type}) => {
 
   return (
     <InfoContainer>
+        {
+          type==="modal"?<ModalToastr/>:<BasicToastr/>
+        }
+        <ErrorModal errorMsg={errorMsg} setErrorMsg={setErrorMsg}/>
         <Title>{product.title}</Title>
         {
             type!=="modal" && 

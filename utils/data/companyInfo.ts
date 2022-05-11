@@ -4,14 +4,17 @@ import {AiFillFacebook,AiFillInstagram,AiFillYoutube} from "react-icons/ai";
 export const contact = {
     address:{
         value:"33552桃園市大溪區月湖路128號2F",
+        name:"地址",
         Icon:MdLocationOn
     },
     phone:{
         value:"03 388 5688",
+        name:"電話",
         Icon:MdPhone
     },
     email:{
         value:"info@pad-pad.com",
+        name:"Email",
         Icon:MdEmail
     }
 }

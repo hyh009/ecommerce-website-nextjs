@@ -13,7 +13,7 @@ const Pagination:React.FC<Props> = ({page,clickHandler}) => {
   return (
     <Container>
         {page && [...Array(page.maxPage).keys()].map((p)=>(
-            <Block active={page.currentPage===(p+1)} onClick={clickHandler}>{p+1}</Block>
+            <Block key={p} active={page.currentPage===(p+1)} onClick={clickHandler}>{p+1}</Block>
         ))}
     </Container>
   )

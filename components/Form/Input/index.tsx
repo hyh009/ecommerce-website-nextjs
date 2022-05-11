@@ -1,5 +1,5 @@
 import React,{Dispatch,SetStateAction} from 'react'
-import {InputContainer, IconContainer,Label, TransparentInput, TransparentSelect} from "./styles";
+import {InputContainer, IconContainer,Label, TransparentInput, TransparentSelect, TransparentTextarea} from "./styles";
 import { IconSpinner } from '../../Common/Spinner';
 import {InputTypes} from "../../../types/auth"
 import {IconType} from "react-icons"
@@ -8,7 +8,7 @@ import {ShowPasswordsState} from "../AuthForm/SignupForm"
 interface InputProps {
   type:InputTypes;
   name:string;
-  value:string;
+  value?:string;
   placeholder?:string;
   propRef?:React.RefObject<HTMLInputElement>;
   changeHandler?:(e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -74,18 +74,45 @@ interface SelectProps {
     value:string,
     displayText:string,
   }[];
+  propRef?:React.RefObject<HTMLSelectElement>;
   Icon?:IconType;
   border?:string;
   IconColor?:string;
 }
 
-export const Select:React.FC<SelectProps> = ({options, Icon, border,IconColor})=>{
+export const Select:React.FC<SelectProps> = ({options, propRef, Icon, border, IconColor})=>{
   return (
-    <InputContainer border={border ?border as string:undefined}>
+    <InputContainer border={border?border as string:undefined}>
        {Icon && <IconContainer color={IconColor?IconColor as string:undefined}><Icon/></IconContainer>}
-    <TransparentSelect>
-      {options.map((item,index)=>(<option key={index} value={item.value}>{item.displayText}</option>))}
+    <TransparentSelect ref={propRef}>
+      {options?.map((item,index)=>(<option key={index} value={item.value}>{item.displayText}</option>))}
       </TransparentSelect>
+    </InputContainer>
+  )
+}
+
+interface TextAreaProps {
+  name:string;
+  value?:string;
+  placeholder?:string;
+  rows?:number;
+  propRef?:React.RefObject<HTMLTextAreaElement>;
+  changeHandler?:(e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  Icon?:IconType;
+  border?:string;
+  IconColor?:string;
+}
+
+export const TextArea:React.FC<TextAreaProps> = ({name,placeholder, value, rows, border, changeHandler,Icon, propRef, IconColor})=>{
+  return (
+    <InputContainer border={border}>
+       {Icon && <IconContainer color={IconColor?IconColor as string:undefined}><Icon/></IconContainer>}
+      <TransparentTextarea name={name} 
+                           value={value} 
+                           placeholder={placeholder}
+                           onChange={changeHandler?changeHandler:undefined}
+                           ref={propRef}
+                           rows={rows}/>
     </InputContainer>
   )
 }

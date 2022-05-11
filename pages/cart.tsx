@@ -4,33 +4,34 @@ import {APPState} from "../store/index";
 import {useSession} from "next-auth/react";
 import { FlexCol, FlexBetween} from "../components/Wrapper/styles";
 import {CartItem, CartHeader, Summary} from "../components/Cart";
+import { EmptyCart } from '../components/Empty';
 import { updateCart, updateNotLoginCart } from '../store/reducer/cartReducer';
 import { axiosInstance } from '../utils/config';
 import { AxiosResponse } from "axios";
+import Head from 'next/head'
+import { PAGE_DESC, PAGE_TITLE } from '../utils/data/headContent';
 import { NextPage } from 'next';
-import { ICart, ICartProduct } from '../types/cart';
+import { ICartProduct } from '../types/cart';
 import { IProduct } from '../types/product';
 import styled from 'styled-components';
 import { devices } from '../styles/responsive';
 
-interface Props {
-    cart:ICart;
-}
 
-const Cart:NextPage<Props> = () => {
+
+const Cart:NextPage = () => {
     const cart = useAppSelector((state:APPState)=>state.cart);
     const {data:session} = useSession();
     const dispatch = useAppDispatch();
     const [products, setProducts] = useState<Array<IProduct>>([]);
 
   useEffect(()=>{
-    let controller = new AbortController();
+    const controller = new AbortController();
     if(cart?.products){
         // get update info(price, inStock) of product
         const ids:Set<string> = new Set();
         cart.products.forEach((product)=>ids.add(product._id as string));
         const getCartProductsInfo = async (ids:Set<string>):Promise<void> => {
-            let promises = [];
+            const promises = [];
             for (const id of ids){
                 promises.push(await axiosInstance.get(`/api/products/${id}`,{signal:controller.signal}));
             }
@@ -86,9 +87,15 @@ const Cart:NextPage<Props> = () => {
     };
 
   return (
-    <Container>
-        <CartHeader quantity={cart.quantity}/>
-        <Bottom>
+    <>
+      <Head>
+        <title>{PAGE_TITLE.CART}</title>
+        <meta name="description" content={PAGE_DESC.CART}></meta>
+      </Head>
+      <Container>
+        <CartHeader quantity={cart.quantity} type="cart"/>
+        {cart.products.length>0 ?
+        (<Bottom>
             <Info>
                 {products.length>0 && cart.products?.map((product:ICartProduct,index:number)=>
                 <CartItem key={`${product._id}${index}`}
@@ -100,8 +107,11 @@ const Cart:NextPage<Props> = () => {
                           deleteCartItem={deleteCartItem} />)}
             </Info>
             <Summary cart={cart} products={products}/>
-        </Bottom>
-    </Container>
+        </Bottom>):
+        <EmptyCart type="cart"/>
+        }
+      </Container>    
+    </>
   )
 }
 
@@ -110,6 +120,9 @@ export default Cart;
 const Container = styled(FlexCol)`
     min-height:calc(100vh - var(--navbarHeight)  - 30px);
     padding:20px;
+    @media ${devices.tabletL}{
+        min-height:auto;
+    }
 `;
 
 const Bottom = styled(FlexBetween)`

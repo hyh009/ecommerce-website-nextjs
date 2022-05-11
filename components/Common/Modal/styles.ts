@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import {AiOutlineClose} from "react-icons/ai";
 import { devices } from "../../../styles/responsive";
-import { scaleUp } from "../../../styles/animation";
 
 
 // modal
@@ -36,8 +35,8 @@ export const ModalContainer = styled.dialog`
 
 export const CloseIcon = styled(AiOutlineClose)`
      position: absolute;
-        top:2px;
-        right:2px;
+        top:5px;
+        right:5px;
         font-size:1.5rem;
         color:gray;
         cursor:pointer;
@@ -82,4 +81,8 @@ export const Text = styled.span`
 export const AddCartContainer = styled(ModalContainer)`
     width:auto ;
     padding:20px 10px;
+    @media ${devices.tablet}{
+        width:80%;
+        padding-bottom:0px;
+    }
 `;

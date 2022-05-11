@@ -5,8 +5,6 @@ type handleCheckDeviceType = ({setCurrentDevice}:{setCurrentDevice:Dispatch<SetS
 const useCheckDevice = ():deviceType=>{
     const [currentDevice, setCurrentDevice] = useState<deviceType>("desktop");
 
-    //check device and decide how many category will show in one page.
-
     const handleCheckDevice:handleCheckDeviceType = useCallback(({setCurrentDevice}) => {
         if (window.innerWidth > 1280) {
             setCurrentDevice("desktop");

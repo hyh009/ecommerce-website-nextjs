@@ -14,7 +14,7 @@ interface Props {
     submitHandler:LoginSubmitHandler
 }
 
-const IconColor:string = "var(--darkGray)"
+const IconColor= "var(--darkGray)"
 
 const LoginForm:React.FC<Props> = ({submitHandler}) => {
     const [inputs, setInputs] = useState<LoginInputsState>({email:"",password:""});
@@ -52,8 +52,8 @@ const LoginForm:React.FC<Props> = ({submitHandler}) => {
                width="35%" 
                alignSelf="center"/>
        <LinkContainer>
-            <Link href="#"><LinkText>忘記密碼</LinkText></Link>
-            <Link href="/signup"><LinkText>註冊用戶</LinkText></Link>
+            <Link href="#" passHref><LinkText>忘記密碼</LinkText></Link>
+            <Link href="/signup" passHref><LinkText>註冊用戶</LinkText></Link>
        </LinkContainer>
     </WhiteForm>
   )

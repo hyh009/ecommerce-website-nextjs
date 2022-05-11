@@ -4,18 +4,20 @@ import {useAppSelector, useAppDispatch} from "../../../store/hooks";
 import {getCart, getLocalSavedCart} from "../../../store/reducer/cartReducer";
 import {useRouter} from "next/router";
 import { Container } from './styles'
-import {Navbar, Newsletter, Footer, Announcement} from "../index";
+import {Navbar, Newsletter, Footer, Announcement, ScrollToTop} from "../index";
 
 
 
 interface Props {
-  children : ReactNode
+  children : ReactNode;
+  animationShowed: boolean;
 }
 
-export const MainLayout:React.FC<Props> = ({children}) => {
+export const MainLayout:React.FC<Props> = ({children, animationShowed}) => {
 
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state)=>state.cart);
+  const router = useRouter();
 
   useEffect(()=>{
     getSession().then((session)=>{
@@ -29,16 +31,31 @@ export const MainLayout:React.FC<Props> = ({children}) => {
 
   return (
     <Container>
-      <Navbar position="sticky" cartNumber={cart.products.length}/>
-      <Announcement/>
+      {
+        (animationShowed || router.pathname!=="/") && 
+        <>
+          <Navbar position="sticky" cartNumber={cart.products.length}/>
+          <Announcement/>
+        </>
+      }
         {children}
-      <Newsletter/>     
-      <Footer/>
+      {
+        (animationShowed || router.pathname!=="/") && 
+        <>
+          <Newsletter/>     
+          <Footer/>
+          <ScrollToTop/>
+        </>
+      }
     </Container>
   )
 };
 
-export const UserLayout:React.FC<Props> = ({children}) => {
+interface UserProps {
+  children : ReactNode;
+}
+
+export const UserLayout:React.FC<UserProps> = ({children}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const cart = useAppSelector((state)=>state.cart);
   const router = useRouter();
@@ -50,7 +67,7 @@ export const UserLayout:React.FC<Props> = ({children}) => {
         setLoading(false);
       }
     })
-  },[])
+  },[router])
 
 
   if(loading){

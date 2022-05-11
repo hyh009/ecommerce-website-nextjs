@@ -23,7 +23,7 @@ const Summary:React.FC<Props> = ({cart, products}) => {
     });
    }
     return total;
-  },[cart.products, products]);
+  },[cart, products]);
 
   return (
     <Container>

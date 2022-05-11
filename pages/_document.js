@@ -7,7 +7,7 @@ export default class MyDocument extends Document {
       <Html lang="zh">
         <Head>
           <link
-            href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Aldrich&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Koulen&display=swap"
             rel="stylesheet"
           />
           <link
@@ -19,6 +19,7 @@ export default class MyDocument extends Document {
         </Head>
         <body>
           <Main />
+          <div id="portal" />
           <NextScript />
         </body>
       </Html>

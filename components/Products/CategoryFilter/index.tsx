@@ -1,5 +1,5 @@
-import React,{useEffect, Dispatch, SetStateAction, useState} from 'react';
-import {useRouter} from "next/router";
+import React,{useEffect, useState, Dispatch, SetStateAction} from 'react';
+import { useRouter} from "next/router";
 import { FilterContainer, Filter, FilterText } from './styles';
 import { Dropdown } from '../../Form';
 import { categories, colors} from "../../../utils/data/productCat";

@@ -1,5 +1,7 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState} from 'react';
 import {useRouter} from "next/router";
+import Head from 'next/head';
+import { PAGE_TITLE, PAGE_DESC } from '../../utils/data/headContent';
 import {H1Title} from "../../components/Title/styles";
 import { CategoryFilter, Product } from '../../components/Products';
 import {Col4T3M2Wrapper, FlexCol} from "../../components/Wrapper/styles";
@@ -9,6 +11,7 @@ import axios, {AxiosResponse} from "axios";
 import { IProduct } from "../../types/product";
 import { GetServerSidePropsContext, NextPage } from 'next';
 import styled from 'styled-components';
+import { devices } from '../../styles/responsive';
 
 interface Props {
   products:IProduct[];
@@ -21,7 +24,6 @@ interface Props {
 const Products:NextPage<Props> = ({products, page}) => {
   const [currentCat, setCurrentCat] = useState<string>("");
   const [currentColor, setCurrentColor] = useState<string>("");
-  const [filterProducts, setFilterProducts] = useState<IProduct[]>(products);
   const router = useRouter();
   const getAnotherPageProduct = (e:React.MouseEvent<HTMLDivElement>) => {
       const clickedDiv = e.target as  HTMLDivElement;
@@ -37,11 +39,12 @@ const Products:NextPage<Props> = ({products, page}) => {
       );
   }
 
-  // useEffect(()=>{
-  //   setFilterProducts(products);
-  // },[products])
-
   return (
+    <>
+    <Head>
+      <title>{PAGE_TITLE.PRODUCTS(router.query?.category? router.query.category as string:"全部商品")}</title>
+      <meta name="description" content={PAGE_DESC.PRODUCTS(router.query?.category? router.query.category as string:"全部商品")}></meta>
+    </Head>
     <Container>
       <H1Title>全部商品</H1Title>
       <CategoryFilter currentCat={currentCat} 
@@ -53,6 +56,7 @@ const Products:NextPage<Props> = ({products, page}) => {
       </ProductsContainer>
       <Pagination page={page} clickHandler={getAnotherPageProduct}/>
     </Container>
+    </>
   )
 }
 
@@ -96,6 +100,9 @@ export default Products;
 const ProductsContainer = styled(Col4T3M2Wrapper)`
   padding:20px;
   gap:15px;
+  @media ${devices.mobile}{
+    padding:10px 5px;
+  }
 `; 
 
 const Container = styled(FlexCol)`

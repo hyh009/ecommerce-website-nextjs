@@ -5,7 +5,7 @@ import {useRouter} from "next/router";
 import { signIn } from "next-auth/react";
 import { PAGE_TITLE, PAGE_DESC } from '../utils/data/headContent';
 import LoginForm from  "../components/Form/AuthForm/LoginForm";
-import useToastr from "../utils/hooks/useToastr";
+import useToastr from "../utils/hooks/useToast";
 import useAuth from "../utils/hooks/useAuth";
 import ErrorModal from '../components/Common/Modal/ErrorModal';
 import { BasicToastr } from '../components/Common/Toast';

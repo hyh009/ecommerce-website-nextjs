@@ -38,7 +38,7 @@ const GENDER_OPTIONS = [
   }
 ];
 
-const IconColor:string = "var(--darkGray)"
+const IconColor = "var(--darkGray)"
 
 interface SignupFromProps {
    submitHandler :SignupSubmitHandler;
@@ -57,7 +57,7 @@ const SignupForm:React.FC<SignupFromProps> = ({submitHandler}) => {
   const changeHandler = (e:React.ChangeEvent<HTMLInputElement>):void => {
     setInputs((prev)=>({...prev, [e.target.name]:e.target.value}))
   } 
-  const emptyInput = Object.values({name, username, email, password, passwordConfirmation}).some((item:any)=>!Boolean(item)); 
+  const emptyInput = Object.values({name, username, email, password, passwordConfirmation}).some((item:any)=>!item); 
   return (
     <TransparentForm onSubmit={(e)=>{submitHandler(e, inputs, setLoading)}}>
      <Title>註冊成為會員</Title>

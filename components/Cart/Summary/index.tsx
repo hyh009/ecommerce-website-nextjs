@@ -18,8 +18,8 @@ const Summary:React.FC<Props> = ({cart, products}) => {
    if(cart && products.length>0){
     cart.products.forEach((product)=>{
       const productInfo = products.find((p)=>`${p._id}`===product._id) as IProduct;
-      total+=productInfo.price.current!==productInfo.price.origin?productInfo.price.current*product.quantity
-                                                                 :productInfo.price.origin*product.quantity;
+      total+=productInfo?.price.current!==productInfo?.price.origin?productInfo?.price.current*product.quantity
+                                                                 :productInfo?.price.origin*product.quantity;
     });
    }
     return total;

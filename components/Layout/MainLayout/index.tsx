@@ -1,4 +1,4 @@
-import React,{useEffect, useState, ReactNode} from 'react';
+import React,{useEffect, useState, ReactNode, Dispatch, SetStateAction} from 'react';
 import { getSession } from 'next-auth/react';
 import {useAppSelector, useAppDispatch} from "../../../store/hooks";
 import {getCart, getLocalSavedCart} from "../../../store/reducer/cartReducer";
@@ -11,21 +11,24 @@ import {Navbar, Newsletter, Footer, Announcement, ScrollToTop} from "../index";
 interface Props {
   children : ReactNode;
   animationShowed: boolean;
+  setIsLoadingSession:Dispatch<SetStateAction<boolean>>;
 }
 
-export const MainLayout:React.FC<Props> = ({children, animationShowed}) => {
+export const MainLayout:React.FC<Props> = ({children, animationShowed, setIsLoadingSession}) => {
 
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state)=>state.cart);
   const router = useRouter();
 
   useEffect(()=>{
+    setIsLoadingSession(true);
     getSession().then((session)=>{
       if(session){
         dispatch(getCart(session.user._id));
       }else{
         dispatch(getLocalSavedCart());
       }
+      setIsLoadingSession(false);
     })
   },[dispatch])
 
@@ -34,7 +37,7 @@ export const MainLayout:React.FC<Props> = ({children, animationShowed}) => {
       {
         (animationShowed || router.pathname!=="/") && 
         <>
-          <Navbar position="sticky" cartNumber={cart.products.length}/>
+          <Navbar position="sticky" cartNumber={cart.products?.length}/>
           <Announcement/>
         </>
       }

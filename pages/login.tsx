@@ -1,9 +1,10 @@
-import React,{useState, ReactElement,Dispatch,SetStateAction} from 'react';
+import React,{ useState, ReactElement, Dispatch, SetStateAction } from 'react';
 import type { NextLayoutComponentType } from 'next';
 import Head from 'next/head';
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import { PAGE_TITLE, PAGE_DESC } from '../utils/data/headContent';
+import { useAppSelector } from '../store/hooks';
 import LoginForm from  "../components/Form/AuthForm/LoginForm";
 import useToastr from "../utils/hooks/useToast";
 import useAuth from "../utils/hooks/useAuth";
@@ -12,6 +13,7 @@ import { BasicToastr } from '../components/Common/Toast';
 import { LoginInputsState } from '../types/auth';
 import styled from "styled-components";
 import { devices } from "../styles/responsive";
+import { axiosInstance } from '../utils/config';
 
 export type LoginSubmitHandler = (e:React.FormEvent<HTMLFormElement>, 
   inputData:LoginInputsState,
@@ -21,6 +23,7 @@ export type LoginSubmitHandler = (e:React.FormEvent<HTMLFormElement>,
 
 const Login: NextLayoutComponentType = () => {
   const [errorMsg, setErrorMsg] = useState<string|null>(null);
+  const cart = useAppSelector((state)=>state.cart);
   const router = useRouter();
   const showToastr = useToastr();
   const authLoading = useAuth();
@@ -37,6 +40,12 @@ const Login: NextLayoutComponentType = () => {
     // error object is null if no error
     if(!result.error){
       // login success
+      // add temporary cart to DB
+      await axiosInstance.post(`/api/cart/combine`,{email:inputData.email, 
+                                                    localCartProduct:cart.products});
+      // delete local cart
+      localStorage.removeItem("cart");
+
       setLoading(false);
       showToastr("login");
       setTimeout(()=>router.push("/profile"),3000);     
@@ -45,7 +54,6 @@ const Login: NextLayoutComponentType = () => {
       setLoading(false);
       setErrorMsg(result.error);
     }
-
 
   }
 
@@ -86,4 +94,5 @@ Login.getLayout = function PageLayout(page:ReactElement) {
   background-position: center;
   @media ${devices.tabletL}{
     backgroundPosition: bottom right;
+  }
 `;

@@ -9,7 +9,7 @@ import { axiosInstance } from '../../utils/config';
 export const getCart = createAsyncThunk(
   "cart/getCart", // name of function
   async(userId:string):Promise<ICart> => {
-    const {data:cart} = await axiosInstance.get<ICart>(`/api/cart/${userId}`);
+    const {data:cart} = await axiosInstance.get<ICart>(`/api/cart/user/${userId}`);
     return cart;
   }
 );
@@ -17,7 +17,7 @@ export const getCart = createAsyncThunk(
 export const createCart = createAsyncThunk(
   "cart/createCart",
   async(cart:ICart):Promise<ICart> => {
-      const {data:newCart} = await axiosInstance.post<ICart>(`/api/cart/${cart.user}`,cart);
+      const {data:newCart} = await axiosInstance.post<ICart>(`/api/cart/user/${cart.user}`,cart);
       return newCart;
   }
 );
@@ -25,10 +25,12 @@ export const createCart = createAsyncThunk(
 export const updateCart = createAsyncThunk(
   "cart/updateCart",
   async(cart:ICart):Promise<ICart> => {
-      const {data:newCart} = await axiosInstance.patch<ICart>(`/api/cart/${cart.user}`,cart);
+      const {data:newCart} = await axiosInstance.patch<ICart>(`/api/cart/user/${cart.user}`,{products:cart.products});
       return newCart;
   }
 )
+
+
 // declaring the types for our state
 export type CartState = {
   products: ICartProduct[],
@@ -66,7 +68,7 @@ export const cartSlice = createSlice({
         localStorage.setItem("cart", JSON.stringify(state));
     },
   },
-  // for server side
+  // for thunk
   extraReducers: builder => {
     builder.addCase(getCart.pending,(state:CartState)=>{
       state.isLoading = true;
@@ -79,15 +81,15 @@ export const cartSlice = createSlice({
     builder.addCase(getCart.rejected,(state:CartState)=>{
       state.isLoading = false;
     }),
-    builder.addCase(createCart.fulfilled,(state:CartState,action)=>{
-      state.products = action.payload.products;
-      state.quantity = action.payload.quantity;
-      state.isLoading = false;
-
+    builder.addCase(updateCart.pending,(state:CartState)=>{
+      state.isLoading = true;
     }),
     builder.addCase(updateCart.fulfilled,(state:CartState,action)=>{
       state.products = action.payload.products;
       state.quantity = action.payload.quantity;
+      state.isLoading = false;
+    }),
+    builder.addCase(updateCart.rejected,(state:CartState)=>{
       state.isLoading = false;
     })
   }

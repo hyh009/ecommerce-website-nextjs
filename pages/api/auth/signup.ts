@@ -1,5 +1,6 @@
 import db from "../../../utilsServer/dbConnect";
 import User from "../../../models/User";
+import Cart from "../../../models/Cart";
 import {signupValidation} from "../../../utilsServer/validations";
 import type { NextApiRequest, NextApiResponse } from 'next'
 import axios from "axios";
@@ -24,8 +25,14 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
                 password,
             });
             if(gender) newUser.gender = gender;
+                const user = await newUser.save();
 
-                await newUser.save();
+                const newCart = new Cart({
+                    user:user._id,
+                    products:[],
+                    quantity:0,
+                })
+                await newCart.save();
                 await db.disconnect();
                 res.status(201).json({message:"User created"});
         } 

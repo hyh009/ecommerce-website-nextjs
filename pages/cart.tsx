@@ -5,9 +5,9 @@ import {useSession} from "next-auth/react";
 import { FlexCol, FlexBetween} from "../components/Wrapper/styles";
 import {CartItem, CartHeader, Summary} from "../components/Cart";
 import { EmptyCart } from '../components/Empty';
+import { BackDrop } from '../components/Common';
 import { updateCart, updateNotLoginCart } from '../store/reducer/cartReducer';
-import { axiosInstance } from '../utils/config';
-import { AxiosResponse } from "axios";
+import { getCartProductsInfo } from "../utils/cartAction"
 import Head from 'next/head'
 import { PAGE_DESC, PAGE_TITLE } from '../utils/data/headContent';
 import { NextPage } from 'next';
@@ -16,35 +16,30 @@ import { IProduct } from '../types/product';
 import styled from 'styled-components';
 import { devices } from '../styles/responsive';
 
+interface Props {
+  isLoadingSession:boolean;
+}
 
-
-const Cart:NextPage = () => {
+const Cart:NextPage<Props> = ({isLoadingSession}) => {
     const cart = useAppSelector((state:APPState)=>state.cart);
     const {data:session} = useSession();
     const dispatch = useAppDispatch();
     const [products, setProducts] = useState<Array<IProduct>>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(()=>{
     const controller = new AbortController();
     if(cart?.products){
         // get update info(price, inStock) of product
         const ids:Set<string> = new Set();
-        cart.products.forEach((product)=>ids.add(product._id as string));
-        const getCartProductsInfo = async (ids:Set<string>):Promise<void> => {
-            const promises = [];
-            for (const id of ids){
-                promises.push(await axiosInstance.get(`/api/products/${id}`,{signal:controller.signal}));
-            }
-
-            const results:AxiosResponse<IProduct>[] = await Promise.all(promises);
-            setProducts(()=>results.map((result)=>result.data));
-        };
-        getCartProductsInfo(ids);       
+        cart.products.forEach((product:ICartProduct)=>ids.add(product._id as string));
+        getCartProductsInfo(ids,setIsLoading, setProducts, controller);       
     }
     return ()=>{
         controller && controller.abort();
     }
   },[cart.products]);
+
 
   const handleAmount = (mode:"plus"|"minus",id?:string):void=>{
     const newProducts = cart.products.reduce<ICartProduct[]>((products:ICartProduct[], p:ICartProduct)=>{
@@ -92,24 +87,38 @@ const Cart:NextPage = () => {
         <title>{PAGE_TITLE.CART}</title>
         <meta name="description" content={PAGE_DESC.CART}></meta>
       </Head>
-      <Container>
-        <CartHeader quantity={cart.quantity} type="cart"/>
-        {cart.products.length>0 ?
-        (<Bottom>
-            <Info>
-                {products.length>0 && cart.products?.map((product:ICartProduct,index:number)=>
-                <CartItem key={`${product._id}${index}`}
-                          product={products.find(((item)=>item._id === product._id)) as IProduct}
-                          quantity={product.quantity}
-                          color={product?.color}
-                          pattern={product.pattern}
-                          handleAmount={handleAmount}
-                          deleteCartItem={deleteCartItem} />)}
-            </Info>
-            <Summary cart={cart} products={products}/>
-        </Bottom>):
-        <EmptyCart type="cart"/>
-        }
+      <Container id="backdrop">
+          {!isLoading && <BackDrop selector="#backdrop"/>}
+          {
+            <>
+            <CartHeader quantity={cart.quantity} type="cart"/>
+              {(!isLoadingSession && cart.products.length>0) &&
+              (<Bottom>
+                  <Info>
+                      {
+                        products.length>0 && cart.products?.map((product:ICartProduct,index:number)=>{
+                          if(products.find(((item)=>item._id === product._id))){
+                            return (
+                              <CartItem key={`${product._id}${index}`}
+                              product={products.find(((item)=>item._id === product._id)) as IProduct}
+                              quantity={product.quantity}
+                              color={product?.color}
+                              pattern={product.pattern}
+                              handleAmount={handleAmount}
+                              deleteCartItem={deleteCartItem} />
+                            )
+                          }else{
+                            return (<></>);
+                          }                        
+                        })
+                     }
+                  </Info>
+                  <Summary cart={cart} products={products}/>
+              </Bottom>)
+              }
+              {(!isLoadingSession && !isLoading && cart.products.length===0 && !cart.isLoading) && <EmptyCart type="cart"/>}          
+            </>
+          }
       </Container>    
     </>
   )
@@ -138,4 +147,3 @@ const Info = styled.div`
     flex-direction:column;
     gap:7px;
 `;
-

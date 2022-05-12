@@ -18,6 +18,7 @@ const MyApp:NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({ 
   // to show loading animation only once
   const [animationShowed, setAnimationShowed] = useState<boolean>(false);
   const [notfirstLoad, setNotFirstLoad] = useState<boolean>(false);
+  const [isLoadingSession, setIsLoadingSession] = useState(false);
   const changeToNotFirstLoad = useCallback(():void=>{
       setNotFirstLoad(true);
   },[])
@@ -39,6 +40,7 @@ const MyApp:NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({ 
       <MainLayout
         {...pageProps}
         animationShowed={animationShowed}
+        setIsLoadingSession={setIsLoadingSession}
         
       >
         {page}
@@ -56,7 +58,9 @@ const MyApp:NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({ 
     {getLayout(<Component {...pageProps} animationShowed={animationShowed} 
                                          setAnimationShowed={setAnimationShowed}
                                          notfirstLoad={notfirstLoad}
-                                         changeToNotFirstLoad={changeToNotFirstLoad}/>)}
+                                         changeToNotFirstLoad={changeToNotFirstLoad}
+                                         isLoadingSession={isLoadingSession}
+                                         setIsLoadingSession={setIsLoadingSession}/>)}
     </SessionProvider>
     </>
   )

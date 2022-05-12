@@ -1,6 +1,6 @@
-import db from "../../../utilsServer/dbConnect";
+import db from "../../../../utilsServer/dbConnect";
 import type { NextApiRequest, NextApiResponse } from 'next';
-import Cart from "../../../models/Cart";
+import Cart from "../../../../models/Cart";
 import { getSession } from "next-auth/react";
 
 async function handler(req:NextApiRequest, res:NextApiResponse){
@@ -49,6 +49,7 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
     if(req.method==="PATCH"){
         try {
             const {userId} = req.query;
+            const {products} = req.body
             const session = await getSession({req});
             if(!session || session.user._id !== userId){
                 return res.status(401).json({message:"Not authentication"});
@@ -58,8 +59,8 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
             if(!cart){
                 return res.status(404).json({message:"Cart not found"});
             }
-            cart.products = req.body.products;
-            cart.quantity = req.body.quantity;
+            cart.products = products
+            cart.quantity = products.length;
 
             await cart.save();
             await db.disconnect();

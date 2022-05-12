@@ -21,7 +21,6 @@ export const CenterContainer = styled.div<ContainerProps>`
     height:${(props)=>props.fill?"100vh":"auto"};
 `
 
-
 export const FlexRow = styled.div<WrapperProps>`
     display:flex;
     align-items:center;

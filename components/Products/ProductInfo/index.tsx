@@ -7,7 +7,7 @@ import { IProduct } from '../../../types/product';
 import { ICartProduct } from '../../../types/cart';
 import { useAppDispatch,useAppSelector } from '../../../store/hooks';
 import useToastr from "../../../utils/hooks/useToast";
-import {createCart, updateCart, updateNotLoginCart} from "../../../store/reducer/cartReducer";
+import {updateCart, updateNotLoginCart} from "../../../store/reducer/cartReducer";
 import { checkCart } from '../../../utils/cartAction';
 
 
@@ -40,7 +40,7 @@ const ProductInfo:React.FC<Props> = ({product, type}) => {
                 dispatch(updateNotLoginCart({products:[newCartItem]}));
                 showToastr("addToCart");
               }else{
-                dispatch(createCart({products:[newCartItem], 
+                dispatch(updateCart({products:[newCartItem], 
                                      user:session.user._id, 
                                      quantity:1}));
                 showToastr("addToCart");

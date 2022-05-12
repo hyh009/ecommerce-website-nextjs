@@ -1,12 +1,9 @@
-import {ICart, ICartProduct} from "../types/cart";
+import { ICartProduct} from "../types/cart";
+import { axiosInstance } from "./config";
+import { AxiosResponse } from "axios";
+import { IProduct } from "../types/product";
+import { Dispatch, SetStateAction } from "react";
 
-// export interface ICartProduct {
-//     _id?: string;
-//     color: ColorType | null;
-//     pattern: PatternType | null;
-//     price: number
-//     quantity:number;
-// }
 
 export const checkCart = (allproducts:ICartProduct[]):ICartProduct[] => {
     const record = new Map();
@@ -23,4 +20,19 @@ export const checkCart = (allproducts:ICartProduct[]):ICartProduct[] => {
 
     return Array.from(record.values());
     
+};
+
+export const getCartProductsInfo = async (ids:Set<string>, 
+                                          setIsLoading:Dispatch<SetStateAction<boolean>>, 
+                                          setProducts:Dispatch<SetStateAction<IProduct[]>>, 
+                                          controller:AbortController):Promise<void> => {
+    setIsLoading(true);
+    const promises = [];
+    for (const id of ids){
+        promises.push(await axiosInstance.get(`/api/products/${id}`,{signal:controller.signal}));
+    }
+
+    const results:AxiosResponse<IProduct>[] = await Promise.all(promises);
+    setProducts(()=>results.map((result)=>result.data));
+    setIsLoading(false);
 };

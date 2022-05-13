@@ -5,6 +5,7 @@ import {getCart, getLocalSavedCart} from "../../../store/reducer/cartReducer";
 import {useRouter} from "next/router";
 import { Container } from './styles'
 import {Navbar, Newsletter, Footer, Announcement, ScrollToTop} from "../index";
+import Error from "next/error";
 
 
 
@@ -12,9 +13,10 @@ interface Props {
   children : ReactNode;
   animationShowed: boolean;
   setIsLoadingSession:Dispatch<SetStateAction<boolean>>;
+  errorCode?:number;
 }
 
-export const MainLayout:React.FC<Props> = ({children, animationShowed, setIsLoadingSession}) => {
+export const MainLayout:React.FC<Props> = ({children, animationShowed, setIsLoadingSession, errorCode}) => {
 
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state)=>state.cart);
@@ -30,7 +32,11 @@ export const MainLayout:React.FC<Props> = ({children, animationShowed, setIsLoad
       }
       setIsLoadingSession(false);
     })
-  },[dispatch])
+  },[dispatch]);
+
+  if (errorCode) {
+    return <Error statusCode={errorCode} />;
+  }
 
   return (
     <Container>
@@ -56,9 +62,10 @@ export const MainLayout:React.FC<Props> = ({children, animationShowed, setIsLoad
 
 interface UserProps {
   children : ReactNode;
+  errorCode?:number;
 }
 
-export const UserLayout:React.FC<UserProps> = ({children}) => {
+export const UserLayout:React.FC<UserProps> = ({children, errorCode}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const cart = useAppSelector((state)=>state.cart);
   const router = useRouter();
@@ -70,11 +77,15 @@ export const UserLayout:React.FC<UserProps> = ({children}) => {
         setLoading(false);
       }
     })
-  },[router])
+  },[router]);
 
 
   if(loading){
     return <div>loading</div>
+  }
+
+  if (errorCode) {
+    return <Error statusCode={errorCode} />;
   }
 
   return (

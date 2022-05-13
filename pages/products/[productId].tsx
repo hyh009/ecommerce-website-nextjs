@@ -5,10 +5,11 @@ import {Col2T1Wrapper} from "../../components/Wrapper/styles";
 import {ProductImgSlider} from "../../components/Common";
 import { ProductInfo } from '../../components/Products';
 import Head from 'next/head';
-import { GetStaticPropsContext, NextPage, } from 'next';
+import { GetStaticPaths, GetStaticPropsContext, NextPage, } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { IProduct } from '../../types/product';
 import { PAGE_TITLE, PAGE_DESC } from '../../utils/data/headContent';
+import { prerenderIds } from "../../utils/data/prerender_products";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -36,13 +37,11 @@ const Product:NextPage<IProps> = ({product}) => {
 }
 
 
-export  const getStaticPaths = async () => {
-  const ProductsRes:AxiosResponse<Array<IProduct>> = await axiosInstance.get("/api/products");
-  const paths = ProductsRes.data.map((post) => ({
-    params: { productId: post._id },
-  }));
-
-  return { paths, fallback: false }
+export  const getStaticPaths: GetStaticPaths = async () => {
+  const paths = prerenderIds.map((id)=>(
+    {params:{productId:id}}
+  ))
+  return { paths, fallback: true };
 
 }
 
@@ -63,8 +62,10 @@ export const getStaticProps = async (context:GetStaticPropsContext) => {
     }
   }catch(error){
     if(axios.isAxiosError(error)){
+      console.log("axios",error);
       return { props: { errorCode: error.response?.status || 500 } };
     }else{
+      console.log("error",error);
       return {props:{errorCode:500}};
     }
   }

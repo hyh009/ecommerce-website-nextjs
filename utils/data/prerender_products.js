@@ -1,0 +1,22 @@
+// product_id that need to prerender productId page
+export const prerenderIds = [
+  "626bf35803ab0add2c160b5c",
+  "627005b718c77b96c5d9fba2",
+  "62763c274e5b637cfc5ad06f",
+  "6276412a4e5b637cfc5ad082",
+  "61a64e6d29b02ac6ca176e1d",
+  "61a651ca29b02ac6ca176e32",
+  "61a657d729b02ac6ca176e44",
+  "61a65c4929b02ac6ca176e4c",
+  "61a65ea929b02ac6ca176e59",
+  "61a6615029b02ac6ca176e63",
+  "61a6630029b02ac6ca176e70",
+  "61a6695629b02ac6ca176e7d",
+  "61a66b0329b02ac6ca176e85",
+  "61a6701029b02ac6ca176e8d",
+  "62040479559dd7a12aa4f7c4",
+  "6204d0b3381dbe5f50b4eeef",
+  "6204d74bb8102e85e665ac70",
+  "6204ded53c7dd2420d0658d5",
+  "62050408ef549bc1a5b83d3f",
+];

@@ -1,3 +1,5 @@
+import {ObjectId} from "mongoose";
+
 export type ProductImgType = {
     desc:string,
     src:string,
@@ -13,13 +15,13 @@ export type ColorType = {
     name:string,
     code:string,
     inStock:boolean,
-    _id?:string,
+    _id?:string|ObjectId,
 }
 
 export type PatternType = {
     name:string,
     inStock:boolean,
-    _id?:string,
+    _id?:string|ObjectId,
 }
 
 export type LiekType = {
@@ -33,16 +35,17 @@ export type PriceType = {
 
 
 export interface IProduct {
-    _id:string,
-    name:string,
-    title:string,
-    desc:string,
-    price:PriceType,
-    imgs:ProductImgType[],
-    categories:CategoriesType,
-    colors?:ColorType[],
-    patterns?:PatternType[],
-    like:LiekType[],
-    notices:string[],
-    imagePath:string,
+    _id:string;
+    name:string;
+    title:string;
+    desc:string;
+    price:PriceType;
+    imgs:ProductImgType[];
+    categories:CategoriesType;
+    colors?:ColorType[];
+    patterns?:PatternType[];
+    like:LiekType[];
+    notices:string[];
+    imagePath:string;
+    createdAt:Date;
 }

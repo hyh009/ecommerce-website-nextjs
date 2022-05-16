@@ -1,27 +1,27 @@
 import React, {useState, useCallback, ReactElement} from "react";
 import Head from "next/head";
 import Router from "next/router";
-import {wrapper} from "../store";
 import { SessionProvider } from "next-auth/react";
 import nProgress from "nprogress";
-// redux toolkit
 import type { NextComponentType } from 'next';
 import { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 import { GlobalStyle } from "../styles/GlobalStyle";
 import { MainLayout } from "../components/Layout";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/nprogress.css";
+import { CartContentProvider } from "../store/cart-context";
+import { AnimationContentProvider } from "../store/animation-context";
 
 
 
 const MyApp:NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({ Component, pageProps }: AppLayoutProps) => {
-  // to show loading animation only once
-  const [animationShowed, setAnimationShowed] = useState<boolean>(false);
-  const [notfirstLoad, setNotFirstLoad] = useState<boolean>(false);
+
   const [isLoadingSession, setIsLoadingSession] = useState(false);
-  const changeToNotFirstLoad = useCallback(():void=>{
-      setNotFirstLoad(true);
-  },[])
+
+  const changeIsLoadingSession = useCallback(() => {
+    setIsLoadingSession((prev)=>!prev);
+  },[]);
+
     // handle route change animation
     Router.events.on('routeChangeStart', () => {
       nProgress.start();
@@ -39,9 +39,7 @@ const MyApp:NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({ 
     ((page:ReactElement) => (
       <MainLayout
         {...pageProps}
-        animationShowed={animationShowed}
-        setIsLoadingSession={setIsLoadingSession}
-        
+        setIsLoadingSession={setIsLoadingSession}       
       >
         {page}
       </MainLayout>
@@ -54,17 +52,17 @@ const MyApp:NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({ 
       <meta charSet="UTF-8" />
     </Head>
     <GlobalStyle />
+    <CartContentProvider>
+    <AnimationContentProvider>
     <SessionProvider session={pageProps.session}>
-    {getLayout(<Component {...pageProps} animationShowed={animationShowed} 
-                                         setAnimationShowed={setAnimationShowed}
-                                         notfirstLoad={notfirstLoad}
-                                         changeToNotFirstLoad={changeToNotFirstLoad}
-                                         isLoadingSession={isLoadingSession}
-                                         setIsLoadingSession={setIsLoadingSession}/>)}
+    {getLayout(<Component {...pageProps} isLoadingSession={isLoadingSession}
+                                         setIsLoadingSession={changeIsLoadingSession}/>)}
     </SessionProvider>
+    </AnimationContentProvider>
+    </CartContentProvider>
     </>
   )
 
 }
 
-export default wrapper.withRedux(MyApp);
+export default MyApp;

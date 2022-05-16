@@ -68,6 +68,8 @@ interface ResState {
 
 export const getServerSideProps = async (context:GetServerSidePropsContext) => {
   try {
+    const { res } = context;
+    res.setHeader('Cache-Control', `s-maxage=60, stale-while-revalidate`) 
     const page = context.query.page as string || "1";
     const category = context.query.category!=="全部商品"? context.query.category:"";
     const color = context.query.color!=="全部"?context.query.color:"";

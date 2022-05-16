@@ -1,5 +1,6 @@
-import {Dispatch, SetStateAction, useEffect} from "react";
+import {Dispatch, SetStateAction, useEffect, useContext} from "react";
 import db from "../utilsServer/dbConnect";
+import  AnimationContext from "../store/animation-context";
 import { default as ProductModel } from "../models/Product"; 
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -20,15 +21,15 @@ interface Props {
   changeToNotFirstLoad:()=>void;
 }
 
-const Home: NextPage<Props> = ({newProducts, animationShowed, setAnimationShowed, notfirstLoad, changeToNotFirstLoad}) => {
-
+const Home: NextPage<Props> = ({newProducts}) => {
+  const animationCtx = useContext(AnimationContext);
   useEffect(()=>{
     let timer:any;
-    if(animationShowed){
-      timer = setTimeout(changeToNotFirstLoad,3000);
+    if(animationCtx.animationShowed){
+      timer = setTimeout(animationCtx.changeToNotFirstLoad,3000);
     }
     return ()=>clearTimeout(timer);
-  },[animationShowed,changeToNotFirstLoad])
+  },[animationCtx.animationShowed,animationCtx.changeToNotFirstLoad])
   
   return (
     <>
@@ -36,12 +37,12 @@ const Home: NextPage<Props> = ({newProducts, animationShowed, setAnimationShowed
         <title>{PAGE_TITLE.HOME}</title>
         <meta name="description" content={PAGE_DESC.HOME}></meta>
       </Head>
-      {!notfirstLoad && <HomeAnimation
-        animationShowed={animationShowed}
-        setAnimationShowed={setAnimationShowed}
+      {!animationCtx.notFirstLoad && <HomeAnimation
+        animationShowed={animationCtx.animationShowed}
+        setAnimationShowed={animationCtx.setAnimationShowed}
       />}
       {
-        animationShowed &&
+        animationCtx.animationShowed &&
         <>
         <HomeSlider/>
         <HomeSession>

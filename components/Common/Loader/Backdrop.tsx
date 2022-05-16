@@ -27,4 +27,8 @@ const ColorDiv = styled.div`
   background-color:rgba(0,0,0,0.5);
   height:100%;
   width:100%;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:5;
 `;

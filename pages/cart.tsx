@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import {useAppSelector, useAppDispatch} from "../store/hooks";
-import {APPState} from "../store/index";
+import React, { useEffect, useState, useContext } from 'react';
 import {useSession} from "next-auth/react";
 import { FlexCol, FlexBetween} from "../components/Wrapper/styles";
 import {CartItem, CartHeader, Summary} from "../components/Cart";
 import { EmptyCart } from '../components/Empty';
-import { BackDrop } from '../components/Common';
-import { updateCart, updateNotLoginCart } from '../store/reducer/cartReducer';
-import { getCartProductsInfo } from "../utils/cartAction"
+import { FixedSpinner } from '../components/Common';
+import CartContext from '../store/cart-context';
+import { getCartProductsInfo } from "../utils/cartAction";
 import Head from 'next/head'
 import { PAGE_DESC, PAGE_TITLE } from '../utils/data/headContent';
 import { NextPage } from 'next';
@@ -21,28 +19,28 @@ interface Props {
 }
 
 const Cart:NextPage<Props> = ({isLoadingSession}) => {
-    const cart = useAppSelector((state:APPState)=>state.cart);
+    const cartCtx = useContext(CartContext);
     const {data:session} = useSession();
-    const dispatch = useAppDispatch();
     const [products, setProducts] = useState<Array<IProduct>>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string|null>(null);
 
   useEffect(()=>{
     const controller = new AbortController();
-    if(cart?.products){
+    if(cartCtx.products){
         // get update info(price, inStock) of product
         const ids:Set<string> = new Set();
-        cart.products.forEach((product:ICartProduct)=>ids.add(product._id as string));
-        getCartProductsInfo(ids,setIsLoading, setProducts, controller);       
+        cartCtx.products.forEach((product:ICartProduct)=>ids.add(product._id as string));
+        getCartProductsInfo(ids, setIsLoading, setProducts, controller);       
     }
     return ()=>{
         controller && controller.abort();
     }
-  },[cart.products]);
+  },[cartCtx.products]);
 
 
   const handleAmount = (mode:"plus"|"minus",id?:string):void=>{
-    const newProducts = cart.products.reduce<ICartProduct[]>((products:ICartProduct[], p:ICartProduct)=>{
+    const newProducts = cartCtx.products.reduce<ICartProduct[]>((products:ICartProduct[], p:ICartProduct)=>{
         if(`${p._id}${p?.pattern?.name}${p?.color?.name}`===id){
             if(p.quantity>=20 && mode==="plus") return products.concat(p);
             if(p.quantity===1 && mode==="minus") return products;
@@ -57,27 +55,27 @@ const Cart:NextPage<Props> = ({isLoadingSession}) => {
      },[]);
 
     if(session){
-        dispatch(updateCart({
-            user: session.user._id,
-            products:newProducts,
-            quantity:newProducts.length
-        }))
+      cartCtx.updateCart({
+        user:session.user._id,
+        products:newProducts,
+        quantity:newProducts.length
+      }, setErrorMsg);
 
       }else{
-        dispatch(updateNotLoginCart({products:newProducts})); 
-        }
+        cartCtx.updateNotLoginCart(newProducts);
+      }
      };
 
   const deleteCartItem = (id:string) => {
-        const updatedCart = cart.products.filter((product:ICartProduct)=>`${product._id}${product.color?.name}${product.pattern?.name}`!== id);
+        const updatedCart = cartCtx.products.filter((product:ICartProduct)=>`${product._id}${product.color?.name}${product.pattern?.name}`!== id);
         if(session){
-          dispatch(updateCart({
+          cartCtx.updateCart({
             user:session.user._id,
             products:updatedCart,
-            quantity:0
-          }))
+            quantity:updatedCart.length
+          }, setErrorMsg);
         }else{
-          dispatch(updateNotLoginCart({products:updatedCart}));
+          cartCtx.updateNotLoginCart(updatedCart);
         }
     };
 
@@ -87,16 +85,16 @@ const Cart:NextPage<Props> = ({isLoadingSession}) => {
         <title>{PAGE_TITLE.CART}</title>
         <meta name="description" content={PAGE_DESC.CART}></meta>
       </Head>
-      <Container id="backdrop">
-          {!isLoading && <BackDrop selector="#backdrop"/>}
+      <Container>
+          {isLoading && <FixedSpinner/>}
           {
             <>
-            <CartHeader quantity={cart.quantity} type="cart"/>
-              {(!isLoadingSession && cart.products.length>0) &&
+            <CartHeader quantity={cartCtx.quantity} type="cart"/>
+              {(!isLoadingSession && cartCtx.products.length>0) &&
               (<Bottom>
                   <Info>
                       {
-                        products.length>0 && cart.products?.map((product:ICartProduct,index:number)=>{
+                        products.length>0 && cartCtx.products?.map((product:ICartProduct,index:number)=>{
                           if(products.find(((item)=>item._id === product._id))){
                             return (
                               <CartItem key={`${product._id}${index}`}
@@ -113,10 +111,10 @@ const Cart:NextPage<Props> = ({isLoadingSession}) => {
                         })
                      }
                   </Info>
-                  <Summary cart={cart} products={products}/>
+                  <Summary cartProducts={cartCtx.products} products={products}/>
               </Bottom>)
               }
-              {(!isLoadingSession && !isLoading && cart.products.length===0 && !cart.isLoading) && <EmptyCart type="cart"/>}          
+              {(!isLoadingSession && !isLoading && cartCtx.products.length===0 && !cartCtx.isCartLoading) && <EmptyCart type="cart"/>}          
             </>
           }
       </Container>    

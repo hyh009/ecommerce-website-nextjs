@@ -1,11 +1,11 @@
-import React,{useEffect, useState, ReactNode, Dispatch, SetStateAction} from 'react';
+import React,{useEffect, useContext, useState, ReactNode, Dispatch, SetStateAction} from 'react';
 import { getSession } from 'next-auth/react';
-import {useAppSelector, useAppDispatch} from "../../../store/hooks";
-import {getCart, getLocalSavedCart} from "../../../store/reducer/cartReducer";
+import AnimationContext from '../../../store/animation-context';
 import {useRouter} from "next/router";
 import { Container } from './styles'
 import {Navbar, Newsletter, Footer, Announcement, ScrollToTop} from "../index";
 import Error from "next/error";
+import CartContext from '../../../store/cart-context';
 
 
 
@@ -16,40 +16,39 @@ interface Props {
   errorCode?:number;
 }
 
-export const MainLayout:React.FC<Props> = ({children, animationShowed, setIsLoadingSession, errorCode}) => {
-
-  const dispatch = useAppDispatch();
-  const cart = useAppSelector((state)=>state.cart);
+export const MainLayout:React.FC<Props> = ({children, setIsLoadingSession, errorCode}) => {
+  const animationCtx = useContext(AnimationContext);
+  const cartCtx = useContext(CartContext);
   const router = useRouter();
 
   useEffect(()=>{
     setIsLoadingSession(true);
     getSession().then((session)=>{
       if(session){
-        dispatch(getCart(session.user._id));
+        cartCtx.getCart(session.user._id);
       }else{
-        dispatch(getLocalSavedCart());
+        cartCtx.getLocalSavedCart();
       }
       setIsLoadingSession(false);
     })
-  },[dispatch]);
+  },[cartCtx.getCart, cartCtx.getLocalSavedCart, setIsLoadingSession]);
 
   if (errorCode) {
     return <Error statusCode={errorCode} />;
   }
 
   return (
-    <Container>
+    <Container id="backdrop">
       {
-        (animationShowed || router.pathname!=="/") && 
+        (animationCtx.animationShowed || router.pathname!=="/") && 
         <>
-          <Navbar position="sticky" cartNumber={cart.products?.length}/>
+          <Navbar position="sticky" cartNumber={cartCtx.quantity}/>
           <Announcement/>
         </>
       }
         {children}
       {
-        (animationShowed || router.pathname!=="/") && 
+        (animationCtx.animationShowed || router.pathname!=="/") && 
         <>
           <Newsletter/>     
           <Footer/>
@@ -67,7 +66,7 @@ interface UserProps {
 
 export const UserLayout:React.FC<UserProps> = ({children, errorCode}) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const cart = useAppSelector((state)=>state.cart);
+  const cartCtx = useContext(CartContext);
   const router = useRouter();
   useEffect(()=>{
     getSession().then((session)=>{
@@ -89,8 +88,8 @@ export const UserLayout:React.FC<UserProps> = ({children, errorCode}) => {
   }
 
   return (
-    <Container>
-      <Navbar position="static" cartNumber={cart.products.length}/>
+    <Container id="backdrop">
+      <Navbar position="static" cartNumber={cartCtx.quantity}/>
         {children}
     </Container>
   )

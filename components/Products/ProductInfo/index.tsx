@@ -1,13 +1,12 @@
-import React,{useState} from 'react';
+import React,{useState, useContext} from 'react';
 import { InfoContainer, Title, Description } from './styles';
 import { Notices, Price, DiscountPrice, ColorSelect, PatternSelect, Quantity } from '../index';
 import {Button, ErrorModal, BasicToastr, ModalToastr} from "../../Common";
 import { useSession } from "next-auth/react";
 import { IProduct } from '../../../types/product';
 import { ICartProduct } from '../../../types/cart';
-import { useAppDispatch,useAppSelector } from '../../../store/hooks';
+import CartContext from '../../../store/cart-context';
 import useToastr from "../../../utils/hooks/useToast";
-import {updateCart, updateNotLoginCart} from "../../../store/reducer/cartReducer";
 import { checkCart } from '../../../utils/cartAction';
 
 
@@ -20,9 +19,8 @@ const ProductInfo:React.FC<Props> = ({product, type}) => {
     const [selectedItem, setSelectedItem] = useState<string>(""); // store selected color or pattern
     const [quantity, setQuantity] = useState<number>(1);
     const [errorMsg, setErrorMsg] = useState<string|null>(null);
+    const cartCtx = useContext(CartContext);
     const { data: session } = useSession();
-    const dispatch = useAppDispatch();
-    const cart = useAppSelector(state=>state.cart);
     const showToastr = useToastr();
 
 
@@ -34,28 +32,32 @@ const ProductInfo:React.FC<Props> = ({product, type}) => {
             pattern:product.patterns? product.patterns.filter((pattern)=>pattern.name===selectedItem)[0] : undefined,
             quantity
         };
-        if(cart.products.length===0){
+        if(cartCtx.products.length===0){
             // create new cart
             if(!session){
-                dispatch(updateNotLoginCart({products:[newCartItem]}));
+                cartCtx.updateNotLoginCart([newCartItem]);
                 showToastr("addToCart");
               }else{
-                dispatch(updateCart({products:[newCartItem], 
-                                     user:session.user._id, 
-                                     quantity:1}));
+                cartCtx.updateCart({
+                  user:session.user._id,
+                  products:[newCartItem],
+                  quantity:1
+                }, setErrorMsg)
                 showToastr("addToCart");
               }
            
         }else{
             // combine same products
-            const noRepeatProducts = checkCart([...cart.products, newCartItem]);
+            const noRepeatProducts = checkCart([...cartCtx.products, newCartItem]);
             if(!session){
-                dispatch(updateNotLoginCart({products:noRepeatProducts}));
+                cartCtx.updateNotLoginCart(noRepeatProducts);
                 showToastr("addToCart");
               }else{
-                dispatch(updateCart({products:noRepeatProducts, 
-                                     user:session.user._id, 
-                                     quantity:noRepeatProducts.length}));
+                cartCtx.updateCart({
+                  user:session.user._id,
+                  products:noRepeatProducts,
+                  quantity:noRepeatProducts.length
+                }, setErrorMsg)
                 showToastr("addToCart");
               }
         }

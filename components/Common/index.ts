@@ -8,4 +8,5 @@ export {default as HomeAnimation} from "./HomeAnimation";
 export {default as TextLoader} from "./Loader/TextLoader";
 export {default as LinearBar} from "./Loader/LinearBar";
 export {default as BackDrop} from "./Loader/Backdrop";
+export {IconSpinner, FixedSpinner} from "./Loader/Spinner"
 export {BasicToastr, ModalToastr} from "./Toast/index";

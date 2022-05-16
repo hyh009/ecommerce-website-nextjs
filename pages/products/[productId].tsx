@@ -5,7 +5,7 @@ import { ProductInfo } from '../../components/Products';
 import Head from 'next/head';
 import { GetStaticPropsContext, NextPage, } from 'next';
 import { ParsedUrlQuery } from 'querystring';
-import { ColorType, IProduct, PatternType, ProductImgType } from '../../types/product';
+import { IProduct } from '../../types/product';
 import { PAGE_TITLE, PAGE_DESC } from '../../utils/data/headContent';
 import db from '../../utilsServer/dbConnect';
 import{ default as ProductModel} from '../../models/Product';
@@ -65,7 +65,6 @@ export const getStaticProps = async (context:GetStaticPropsContext) => {
       revalidate: 600,
     }
   }catch(error){
-    console.log(error);
     return {props:{errorCode:500}};
     
   }

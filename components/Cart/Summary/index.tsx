@@ -5,25 +5,22 @@ import {Container, SummaryTitle, SummaryItem, SummaryItemText, SummaryItemPrice}
 import {Button} from "../../Common";
 
 interface Props {
-  cart:{
-    products:ICartProduct[];
-    quantity:number;
-  };
+  cartProducts:ICartProduct[];
   products:IProduct[];
 }
 
-const Summary:React.FC<Props> = ({cart, products}) => {
+const Summary:React.FC<Props> = ({cartProducts, products}) => {
   const productTotal = useMemo(() => {
     let total=0;
-   if(cart && products.length>0){
-    cart.products.forEach((product)=>{
+   if(cartProducts && products.length>0){
+    cartProducts.forEach((product)=>{
       const productInfo = products.find((p)=>`${p._id}`===product._id) as IProduct;
       total+=productInfo?.price.current!==productInfo?.price.origin?productInfo?.price.current*product.quantity
                                                                  :productInfo?.price.origin*product.quantity;
     });
    }
     return total;
-  },[cart, products]);
+  },[cartProducts, products]);
 
   return (
     <Container>

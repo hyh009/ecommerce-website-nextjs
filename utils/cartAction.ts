@@ -1,10 +1,10 @@
-import { ICartProduct} from "../types/cart";
 import { axiosInstance } from "./config";
 import { AxiosResponse } from "axios";
 import { IProduct } from "../types/product";
 import { Dispatch, SetStateAction } from "react";
+import { ICartProduct} from "../types/cart";
 
-
+// check if product already in the cart
 export const checkCart = (allproducts:ICartProduct[]):ICartProduct[] => {
     const record = new Map();
     for(let i=0;i<allproducts.length;i++){  

@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {Title,Top, CustomLink, TopTextContainer, TopText} from "./styles";
 import { useSession } from 'next-auth/react';
-import { useAppDispatch} from "../../../store/hooks";
-import {updateCart,cleanupNotLoginCart} from "../../../store/reducer/cartReducer";
+import CartContext from '../../../store/cart-context';
 import Link from "next/link";
 import { FixedWidthButton } from '../../Common';
 
@@ -12,18 +11,19 @@ interface Props {
 }
 
 const CartHeader:React.FC<Props> = ({quantity, type}) => {
-  const dispatch = useAppDispatch();
+  const cartCtx = useContext(CartContext);
   const {data:session} = useSession();
+  const [errorMsg, setErrorMsg] = useState<string|null>(null);
 
   const cleanupCart = () => {
         if(session){
-            dispatch(updateCart({
-            user:session.user._id,
-            products:[],
-            quantity:0
-            }))
+            cartCtx.updateCart({
+                user:session.user._id,
+                products:[],
+                quantity:0
+            }, setErrorMsg)        
         }else{
-            dispatch(cleanupNotLoginCart());
+            cartCtx.cleanupNotLoginCart();
         }
     };
   return (

@@ -1,9 +1,11 @@
 import React from 'react';
-import { Container } from './styles';
+import { Container, Header } from './styles';
 
 const ProfileCart = () => {
   return (
-    <Container></Container>
+    <Container>
+      <Header/>
+    </Container>
   )
 }
 

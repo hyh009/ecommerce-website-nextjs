@@ -23,7 +23,7 @@ export interface IUser {
   name:string;
   username:string;
   email: string;
-  password?: string;
+  password: string;
   gender:"男"| "女"| "其他"| "未設定";
   role:"admin" | "user";
   profilePicUrl:string;

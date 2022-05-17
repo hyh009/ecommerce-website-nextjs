@@ -1,6 +1,4 @@
 import React from 'react';
-import {useAppSelector} from "../store/hooks";
-import {APPState} from "../store/index";
 import { CartHeader } from '../components/Cart';
 import { EmptyCart } from '../components/Empty';
 import { FlexCol} from "../components/Wrapper/styles";
@@ -8,10 +6,10 @@ import styled from 'styled-components';
 import { NextPage } from 'next';
 
 const Wish:NextPage = () => {
-    const cart = useAppSelector((state:APPState)=>state.cart);
+
   return (
     <Container>
-        <CartHeader quantity={cart.quantity} type="wish"/>
+        <CartHeader quantity={0} type="wish"/>
         <EmptyCart type="wish"/>
     </Container>
   )

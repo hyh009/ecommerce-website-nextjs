@@ -22,6 +22,7 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
             return res.status(201).json(newCart);
         } 
         catch (error) {
+            await db.disconnect();
             return res.status(500).json({message:"Server error"});
         }
     }
@@ -37,12 +38,12 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
             if(!cart){
                 return res.status(404).json({message:"Cart not found"});
             }
-            console.log(cart);
             await db.disconnect();
             return res.status(201).json(cart);
         } 
         catch (error) {
             console.log(error);
+            await db.disconnect();
             return res.status(500).json({message:"Server error"});
         }
     }
@@ -68,6 +69,7 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
         } 
         catch (error) {
             console.log(error);
+            await db.disconnect();
             return res.status(500).json({message:"Server error"});
         }
     }

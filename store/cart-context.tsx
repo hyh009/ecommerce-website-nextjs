@@ -50,7 +50,7 @@ const useValue = () => {
   },[]);
 
   const updateCart = async (cart:ICart,
-    setErrorMsg:Dispatch<SetStateAction<string | null>>) => {
+    setErrorMsg?:Dispatch<SetStateAction<string | null>>) => {
     try{
     setIsCartLoading(true);
     const {data:newCart} = await axiosInstance.patch<ICart>(`/api/cart/user/${cart.user}`,{products:cart.products});
@@ -59,7 +59,9 @@ const useValue = () => {
     setIsCartLoading(false);
     }
     catch(error){
-    setErrorMsg(catchError(error));
+    if(setErrorMsg){
+      setErrorMsg(catchError(error));
+    }
     setIsCartLoading(false);
     }
   };

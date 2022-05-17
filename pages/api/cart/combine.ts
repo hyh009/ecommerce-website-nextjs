@@ -20,7 +20,11 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
             userCart.quantity = newCartProducts.length;
             await userCart.save();
             await db.disconnect();
-            return res.status(201).json(newCartProducts);
+            return res.status(201).json({
+                user:session.user._id,
+                products:newCartProducts,
+                quantity:newCartProducts.length
+            });
 
         }catch(error){
             console.log(error);

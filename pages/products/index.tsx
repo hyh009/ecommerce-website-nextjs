@@ -6,8 +6,8 @@ import {H1Title} from "../../components/Title/styles";
 import { CategoryFilter, Product } from '../../components/Products';
 import {Col4T3M2Wrapper, FlexCol} from "../../components/Wrapper/styles";
 import { Pagination } from '../../components/Common';
-import { axiosInstance } from '../../utils/config';
-import axios, {AxiosResponse} from "axios";
+import {default as ProductModel} from "../../models/Product";
+import db from "../../utilsServer/dbConnect";
 import { IProduct } from "../../types/product";
 import { GetServerSidePropsContext, NextPage } from 'next';
 import styled from 'styled-components';
@@ -60,41 +60,65 @@ const Products:NextPage<Props> = ({products, page}) => {
   )
 }
 
-interface ResState {
-  products:IProduct[];
-  maxPage:number;
-  currentPage:number;
-}
-
 export const getServerSideProps = async (context:GetServerSidePropsContext) => {
   try {
     const { res } = context;
-    res.setHeader('Cache-Control', `s-maxage=60, stale-while-revalidate`) 
-    const page = context.query.page as string || "1";
+    res.setHeader('Cache-Control', `s-maxage=60, stale-while-revalidate`);
+    const SIZE = 8;
+    const SORT_OPTIONS = {
+      asc:{"price.current":1},
+      desc:{"price.current":-1},
+      newest:{"createdAt":-1}
+    } 
+    const PAGE = context.query.page?  parseInt(context.query.page as string) : 1;
     const category = context.query.category!=="全部商品"? context.query.category:"";
     const color = context.query.color!=="全部"?context.query.color:"";
-    const params = {
-      category,
-      color,
-      page,
-      sort:context.query.sort
-    };
-    const productsRes:AxiosResponse<ResState> = await axiosInstance.get(`/api/products`,{params});
-    return {
-      props: {
-        products: productsRes.data.products,
-        page: {
-          currentPage:productsRes.data.currentPage,
-          maxPage:productsRes.data.maxPage
-        }
-      },
-    }
-  }catch(error){
-    if(axios.isAxiosError(error)){
-      return { props: { errorCode: error.response?.status || 500 } };
+    const SORT = context.query.sort?SORT_OPTIONS[context.query.sort as "asc"|"desc"|"newest"]:SORT_OPTIONS["newest"];
+    let totalProducts=0; 
+    let products:IProduct[]=[];
+    let mongooseQuery = {};
+
+    await db.connect();
+    // condition
+    if(category && color){
+        const colorPattern = new RegExp(`${color}`);
+        mongooseQuery = {categories:category,
+            $or:[ {"colors.name":{$regex:colorPattern}},{"patterns.name":{$regex:colorPattern}}] }
+    }else if(category){
+        mongooseQuery = {categories:category}
+    }else if(color){
+        const colorPattern = new RegExp(`${color}`);
+        mongooseQuery = {$or:[ {"colors.name":{$regex:colorPattern}},{"patterns.name":{$regex:colorPattern}}]}
     }else{
-      return {props:{errorCode:500}};
+        mongooseQuery={};
     }
+
+  // get the data
+      if(PAGE===1){
+          products = await ProductModel.find(mongooseQuery)
+                                  .sort(SORT)
+                                  .limit(SIZE).lean();
+      }else{
+          products = await ProductModel.find(mongooseQuery)
+                                  .sort(SORT)
+                                  .skip((PAGE-1)*SIZE)
+                                  .limit(SIZE).lean();
+      }
+      totalProducts = await ProductModel.find(mongooseQuery)
+                                    .countDocuments().lean();
+      await db.disconnect();
+      return {
+        props: {
+          products:JSON.parse(JSON.stringify(products)),
+          page: {
+            currentPage:PAGE,
+            maxPage:Math.ceil(totalProducts/SIZE),
+          }
+        },
+      }
+  }catch(error){
+    await db.disconnect();
+    return {props:{errorCode:500}};
   }
 }
 export default Products;

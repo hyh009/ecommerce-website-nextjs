@@ -137,6 +137,7 @@ const Navbar:React.FC<Props> = ({position, cartNumber}) => {
             <NavMenu text="登出" onClick={logoutHandler}/>
             <Avator src={session.user?.image as string} 
                     alt={session.user?.name as string} 
+                    link="/profile"
                     shape="circle" 
                     border="2px solid var(--secondaryColor)"/>
           </>

@@ -13,11 +13,9 @@ function withUserAuth(getServerSidePropsFunction:any) {
                 }
             }
         }
-        return {
-            props:{session}
-        }
+        return await getServerSidePropsFunction(context, session);
+        
     };
   }
 
 export default withUserAuth;
-  

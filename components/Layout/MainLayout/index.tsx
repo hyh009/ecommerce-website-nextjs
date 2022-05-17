@@ -2,10 +2,11 @@ import React,{useEffect, useContext, useState, ReactNode, Dispatch, SetStateActi
 import { getSession } from 'next-auth/react';
 import AnimationContext from '../../../store/animation-context';
 import {useRouter} from "next/router";
-import { Container } from './styles'
-import {Navbar, Newsletter, Footer, Announcement, ScrollToTop} from "../index";
+import { Container, UserContainer } from './styles'
+import {Navbar, Newsletter, Footer, Announcement, ScrollToTop, ProfileSidebar} from "../index";
 import Error from "next/error";
 import CartContext from '../../../store/cart-context';
+import { Session } from 'next-auth';
 
 
 
@@ -18,20 +19,20 @@ interface Props {
 
 export const MainLayout:React.FC<Props> = ({children, setIsLoadingSession, errorCode}) => {
   const animationCtx = useContext(AnimationContext);
-  const cartCtx = useContext(CartContext);
+  const {quantity, getCart, getLocalSavedCart} = useContext(CartContext);
   const router = useRouter();
 
   useEffect(()=>{
     setIsLoadingSession(true);
     getSession().then((session)=>{
       if(session){
-        cartCtx.getCart(session.user._id);
+        getCart(session.user._id);
       }else{
-        cartCtx.getLocalSavedCart();
+        getLocalSavedCart();
       }
       setIsLoadingSession(false);
     })
-  },[cartCtx.getCart, cartCtx.getLocalSavedCart, setIsLoadingSession]);
+  },[getCart, getLocalSavedCart, setIsLoadingSession]);
 
   if (errorCode) {
     return <Error statusCode={errorCode} />;
@@ -42,7 +43,7 @@ export const MainLayout:React.FC<Props> = ({children, setIsLoadingSession, error
       {
         (animationCtx.animationShowed || router.pathname!=="/") && 
         <>
-          <Navbar position="sticky" cartNumber={cartCtx.quantity}/>
+          <Navbar position="sticky" cartNumber={quantity}/>
           <Announcement/>
         </>
       }
@@ -66,13 +67,16 @@ interface UserProps {
 
 export const UserLayout:React.FC<UserProps> = ({children, errorCode}) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [session, setSession] = useState<Session|null>(null);
   const cartCtx = useContext(CartContext);
   const router = useRouter();
+
   useEffect(()=>{
     getSession().then((session)=>{
       if(!session){
         router.push("/login");
       }else{
+        setSession(session);
         setLoading(false);
       }
     })
@@ -90,7 +94,11 @@ export const UserLayout:React.FC<UserProps> = ({children, errorCode}) => {
   return (
     <Container id="backdrop">
       <Navbar position="static" cartNumber={cartCtx.quantity}/>
-        {children}
+        <UserContainer>
+          <ProfileSidebar session={session}/>
+          {children}
+        </UserContainer>
+      <Footer background="#f0eeee"/>
     </Container>
   )
 };

@@ -6,7 +6,7 @@ const useCheckDevice = ():deviceType=>{
     const [currentDevice, setCurrentDevice] = useState<deviceType>("desktop");
 
     const handleCheckDevice:handleCheckDeviceType = useCallback(({setCurrentDevice}) => {
-        if (window.innerWidth > 1280) {
+        if (window.innerWidth > 1024) {
             setCurrentDevice("desktop");
         } else if (window.innerWidth > 770) {
             setCurrentDevice("tabletL");

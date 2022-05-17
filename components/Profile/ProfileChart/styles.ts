@@ -2,14 +2,12 @@ import styled from "styled-components";
 import { devices } from "../../../styles/responsive";
 
 export const Container = styled.div`
-position:relative;
-`
-
-export const UserContainer = styled.div`
+  padding: 10px;
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  box-shadow: 0 0 10px rgba(122, 122, 122, 0.25);
+  border-radius: 5px;
+  flex: 2;
   @media ${devices.tabletL}{
-    grid-template-columns: repeat(1,1fr);
+      min-height:200px;
   }
 `;

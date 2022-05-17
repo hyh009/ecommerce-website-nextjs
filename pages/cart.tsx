@@ -3,7 +3,7 @@ import {useSession} from "next-auth/react";
 import { FlexCol, FlexBetween} from "../components/Wrapper/styles";
 import {CartItem, CartHeader, Summary} from "../components/Cart";
 import { EmptyCart } from '../components/Empty';
-import { FixedSpinner } from '../components/Common';
+import { FixedSpinner, ErrorModal, } from '../components/Common';
 import CartContext from '../store/cart-context';
 import { getCartProductsInfo } from "../utils/cartAction";
 import Head from 'next/head'
@@ -85,8 +85,9 @@ const Cart:NextPage<Props> = ({isLoadingSession}) => {
         <title>{PAGE_TITLE.CART}</title>
         <meta name="description" content={PAGE_DESC.CART}></meta>
       </Head>
+      <ErrorModal errorMsg={errorMsg} setErrorMsg={setErrorMsg}/>
       <Container>
-          {isLoading && <FixedSpinner/>}
+          {(isLoading||cartCtx.isCartLoading) && <FixedSpinner/>}
           {
             <>
             <CartHeader quantity={cartCtx.quantity} type="cart"/>

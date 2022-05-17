@@ -1,11 +1,11 @@
-import React,{ useState, ReactElement, Dispatch, SetStateAction } from 'react';
+import React,{ useState, useContext, ReactElement, Dispatch, SetStateAction } from 'react';
 import type { NextLayoutComponentType } from 'next';
 import Head from 'next/head';
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import { PAGE_TITLE, PAGE_DESC } from '../utils/data/headContent';
-import { useAppSelector } from '../store/hooks';
 import LoginForm from  "../components/Form/AuthForm/LoginForm";
+import CartContext from '../store/cart-context';
 import useToastr from "../utils/hooks/useToast";
 import useAuth from "../utils/hooks/useAuth";
 import ErrorModal from '../components/Common/Modal/ErrorModal';
@@ -23,7 +23,7 @@ export type LoginSubmitHandler = (e:React.FormEvent<HTMLFormElement>,
 
 const Login: NextLayoutComponentType = () => {
   const [errorMsg, setErrorMsg] = useState<string|null>(null);
-  const cart = useAppSelector((state)=>state.cart);
+  const cartCtx = useContext(CartContext);
   const router = useRouter();
   const showToastr = useToastr();
   const authLoading = useAuth();
@@ -41,8 +41,10 @@ const Login: NextLayoutComponentType = () => {
     if(!result.error){
       // login success
       // add temporary cart to DB
-      await axiosInstance.post(`/api/cart/combine`,{email:inputData.email, 
-                                                    localCartProduct:cart.products});
+      const {data:combineCart} = await axiosInstance.post(`/api/cart/combine`,{email:inputData.email, 
+                                                    localCartProduct:cartCtx.products});
+      // update cartContext
+      cartCtx.updateCart(combineCart);
       // delete local cart
       localStorage.removeItem("cart");
 

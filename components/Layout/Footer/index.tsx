@@ -27,9 +27,13 @@ const CatLink = React.forwardRef<HTMLAnchorElement,CatLinkProps>(({href, onClick
 CatLink.displayName = "CatLink";
 
 
-const Footer:React.FC = () => {
+interface Props {
+  background?:string;
+}
+
+const Footer:React.FC<Props> = ({background}) => {
   return (
-    <Container>
+    <Container background={background}>
       <Left>
         <Logo>墊一店奇想國際有限公司</Logo>
         <Description>本網站為練習用網站，資訊來源自網路。</Description>

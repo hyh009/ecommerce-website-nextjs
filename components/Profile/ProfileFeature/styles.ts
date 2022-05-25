@@ -5,7 +5,7 @@ export const Container = styled.div`
   flex-direction: column;
   box-shadow: 0 0 10px rgba(122, 122, 122, 0.25);
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 5px;
   justify-content:space-between;
 `;
 

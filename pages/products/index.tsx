@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { PAGE_TITLE, PAGE_DESC } from '../../utils/data/headContent';
 import {H1Title} from "../../components/Title/styles";
 import { CategoryFilter, Product } from '../../components/Products';
-import {Col4T3M2Wrapper, FlexCol} from "../../components/Wrapper/styles";
+import {Col4T2Wrapper, FlexCol} from "../../components/Wrapper/styles";
 import { Pagination } from '../../components/Common';
 import {default as ProductModel} from "../../models/Product";
 import db from "../../utilsServer/dbConnect";
@@ -123,7 +123,7 @@ export const getServerSideProps = async (context:GetServerSidePropsContext) => {
 }
 export default Products;
 
-const ProductsContainer = styled(Col4T3M2Wrapper)`
+const ProductsContainer = styled(Col4T2Wrapper)`
   padding:20px;
   gap:15px;
   @media ${devices.mobile}{

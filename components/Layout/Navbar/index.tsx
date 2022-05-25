@@ -12,6 +12,7 @@ import {AiOutlineClose,AiOutlineMenu,AiOutlineShoppingCart} from "react-icons/ai
 import {IconType}from "react-icons";
 import {ForwardRefProps} from "../../../types/basic";
 import navbarItem from "../../../utils/data/navbarItem";
+import { baseUrl } from '../../../utils/config';
 
 
 interface Props {
@@ -89,8 +90,9 @@ const Navbar:React.FC<Props> = ({position, cartNumber}) => {
   const router =useRouter();
   useClickOutsideClose(menuRef, setShow);
 
+  
   const logoutHandler = ():void => {
-    signOut();
+    signOut({ callbackUrl: `${baseUrl}/login`});
   }
   // close companymenu after path changed
   useEffect(() => {

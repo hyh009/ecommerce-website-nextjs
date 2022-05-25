@@ -31,6 +31,17 @@ export interface IUser {
   lank:"普通會員" | "VIP會員";
   coupon:{code:string, expiredDate: Date}[];
   coverColor:string;
-  phone?:string;
+  phone:string;
+  address:string;
+  createdAt?:string;
+  updatedAt?:string;
+}
+
+export interface UpdateUserState {
+  name?:string;
+  gender?:"男"|"女"|"其他"|"未設定";
+  email?:string;
   address?:string;
+  phone?:string;
+  coverColor?:string;
 }

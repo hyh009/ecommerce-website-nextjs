@@ -6,7 +6,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { PAGE_DESC, PAGE_TITLE } from '../utils/data/headContent';
 import {HomeSlider,CategoriesSlider,HomeAnimation} from "../components/Common";
-import { HomeSession,Col4T3M2Wrapper } from '../components/Wrapper/styles';
+import { HomeSession,Col4T2Wrapper } from '../components/Wrapper/styles';
 import {H3Title} from "../components/Title/styles";
 import {Product} from "../components/Products";
 import { IProduct } from '../types/product';
@@ -51,11 +51,11 @@ const Home: NextPage<Props> = ({newProducts}) => {
         </HomeSession>
         <HomeSession>
           <H3Title>最新商品</H3Title>
-          <Col4T3M2Wrapper pdRL="20px">
+          <Col4T2Wrapper pdRL="20px">
           {
              newProducts?.map((item)=>(<Product key={item._id} product={item}/>))
           }
-          </Col4T3M2Wrapper>
+          </Col4T2Wrapper>
         </HomeSession>
         </>
       }

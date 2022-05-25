@@ -4,6 +4,7 @@ import {devices} from "../../../styles/responsive";
 interface ButtonProps {
     color?:string;
     backgroundColor?:string;
+    borderRadius?:string;
     border?:string;
     width?:string;
     fontSize?:string;
@@ -23,6 +24,7 @@ export const BasicButton = styled.button<ButtonProps>`
     color:${(props)=>props.color? props.color: "#fff"};
     background-color:${(props)=>props.backgroundColor?props.backgroundColor: "black"};
     border:${(props)=>props.border || "none"};
+    border-radius:${(props)=>props.borderRadius?props.borderRadius:"0px"};
     filter:${(props)=>props.isDisable?"grayscale(50%)":"none"};
     padding:${(props)=> props.space ? BUTTON_SPACE[props.space] : BUTTON_SPACE["standard"]};
     width:${(props)=>props.width? props.width:"20%"};

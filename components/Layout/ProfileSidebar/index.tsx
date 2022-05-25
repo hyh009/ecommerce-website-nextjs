@@ -8,7 +8,7 @@ import {MdPerson, MdPassword, MdShoppingCart} from "react-icons/md";
 import {RiFilePaper2Fill, RiCoupon2Fill} from "react-icons/ri"
 import { IconType } from "react-icons";
 import useCheckDevice from '../../../utils/hooks/useCheckDevice';
-import { Session } from 'next-auth';
+import { IUser } from '../../../types/auth';
 
 
 interface ListProps extends ForwardRefProps {
@@ -30,10 +30,10 @@ const ListContent = React.forwardRef<HTMLAnchorElement,ListProps>(({href, onClic
 ListContent.displayName = "ListContent";
 
 interface Props {
-    session:Session|null;
+    user:IUser;
 }
 
-const ProfileSidebar:React.FC<Props> = ({session}) => {
+const ProfileSidebar:React.FC<Props> = ({user}) => {
     const [showUpArrow, setShowUpArrow] = useState(false);
     const [showList, setShowList] = useState(true);
     const devices = useCheckDevice();
@@ -50,7 +50,7 @@ const ProfileSidebar:React.FC<Props> = ({session}) => {
   return (
     <Container showList={showList}>
         <SidebarWrapper>
-            <Title>{`${session?.user.name}的頁面`}
+            <Title showList={showList}>{`${user.name}的頁面`}
             {showUpArrow ? (
                   <ArrowUp
                     onClick={() => {

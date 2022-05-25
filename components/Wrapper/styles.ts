@@ -13,6 +13,18 @@ interface ContainerProps {
     fill?:boolean;
 }
 
+export const ProfileContainer = styled.div`
+  grid-column:2/6;
+  display:flex;
+  height:calc(100vh - var(--navbarHeight));
+  @media ${devices.tabletL}{
+    grid-column:1/6;
+    flex-direction:column-reverse;
+    height:max-content;
+    margin-top:50px;
+  }
+`;
+
 export const CenterContainer = styled.div<ContainerProps>`
     display: flex;
     align-items:center;
@@ -90,6 +102,16 @@ export const Col3T1Wrapper = styled.div`
     @media ${devices.mobile}{
         grid-template-columns:repeat(1,minmax(0,1fr));
         gap: 50px;
+    }
+`;
+
+export const Col4T2Wrapper = styled.div<WrapperProps>`
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:10px;
+    padding:0px ${(props)=>props.pdRL?props.pdRL:0};
+    @media ${devices.tablet}{
+        grid-template-columns:repeat(2,minmax(0,1fr));
     }
 `;
 

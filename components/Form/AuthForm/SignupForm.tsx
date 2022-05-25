@@ -19,7 +19,7 @@ const INITIAL_INPUTS = {
   password:"",
   passwordConfirmation:""
 }
-const GENDER_OPTIONS = [
+export const GENDER_OPTIONS = [
   {
     value:"",
     displayText:"請選擇性別",

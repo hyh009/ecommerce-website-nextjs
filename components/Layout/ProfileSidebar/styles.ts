@@ -14,10 +14,12 @@ export const Container = styled.div<ContainerProps>`
   background-color: #fffdf6;
   height: calc(100vh - 60px);
   grid-column: 1/2;
+  z-index:1;
   @media ${devices.tabletL}{
     position:absolute;
-    height:${(props)=>props.showList?"fit-content":"30px"} ;
+    height:max-content;
     width:100%;
+    box-shadow:0 0 5px #eee;
   }
 `;
 
@@ -31,8 +33,11 @@ export const SidebarWrapper = styled.div`
   }
 `;
 
+interface TitleProps {
+  showList:boolean;
+}
 
-export const Title = styled.h3`
+export const Title = styled.h3<TitleProps>`
   letter-spacing: 3px;
   font-size: 0.875rem;
   color: #acb2ac;
@@ -41,6 +46,10 @@ export const Title = styled.h3`
   display: flex;
   align-items: center;
   padding: 10px 0;
+  @media ${devices.tabletL}{
+    padding:5px 0;
+    margin-bottom:${(props)=>props.showList?"10px":"0"};
+  }
 `;
 
 export const ArrowUp = styled(AiOutlineArrowUp)`

@@ -2,6 +2,7 @@ import mongoose,{Schema, Document} from "mongoose";
 import bcrypt from "bcrypt";
 import {IUser} from "../types/auth"
 
+
 export interface IUserDocument extends IUser,Document { 
   comparePassword(inputPassword: string): Promise<boolean>;
 }

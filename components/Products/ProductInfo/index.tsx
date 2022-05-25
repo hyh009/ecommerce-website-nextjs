@@ -1,7 +1,7 @@
 import React,{useState, useContext} from 'react';
 import { InfoContainer, Title, Description } from './styles';
 import { Notices, Price, DiscountPrice, ColorSelect, PatternSelect, Quantity } from '../index';
-import {Button, ErrorModal, BasicToastr, ModalToastr} from "../../Common";
+import {Button, ErrorModal, BasicToastr} from "../../Common";
 import { useSession } from "next-auth/react";
 import { IProduct } from '../../../types/product';
 import { ICartProduct } from '../../../types/cart';
@@ -12,10 +12,11 @@ import { checkCart } from '../../../utils/cartAction';
 
 interface Props {
     product:IProduct;
-    type?:"modal"
+    type?:"modal";
+    closeDialog?:()=>void;
 }
 
-const ProductInfo:React.FC<Props> = ({product, type}) => {
+const ProductInfo:React.FC<Props> = ({product, type, closeDialog}) => {
     const [selectedItem, setSelectedItem] = useState<string>(""); // store selected color or pattern
     const [quantity, setQuantity] = useState<number>(1);
     const [errorMsg, setErrorMsg] = useState<string|null>(null);
@@ -37,13 +38,20 @@ const ProductInfo:React.FC<Props> = ({product, type}) => {
             if(!session){
                 cartCtx.updateNotLoginCart([newCartItem]);
                 showToastr("addToCart");
+                if(type==="modal" && closeDialog){
+                  closeDialog();
+                }
+                
               }else{
                 cartCtx.updateCart({
                   user:session.user._id,
                   products:[newCartItem],
                   quantity:1
-                }, setErrorMsg)
+                }, setErrorMsg);
                 showToastr("addToCart");
+                if(type==="modal" && closeDialog){
+                  closeDialog();
+                }
               }
            
         }else{
@@ -52,13 +60,20 @@ const ProductInfo:React.FC<Props> = ({product, type}) => {
             if(!session){
                 cartCtx.updateNotLoginCart(noRepeatProducts);
                 showToastr("addToCart");
+                if(type==="modal" && closeDialog){
+                  closeDialog();
+                }
               }else{
                 cartCtx.updateCart({
                   user:session.user._id,
                   products:noRepeatProducts,
                   quantity:noRepeatProducts.length
-                }, setErrorMsg)
+                }, setErrorMsg);
                 showToastr("addToCart");
+                if(type==="modal" && closeDialog){
+                  closeDialog();
+                }
+                
               }
         }
     };
@@ -74,7 +89,7 @@ const ProductInfo:React.FC<Props> = ({product, type}) => {
   return (
     <InfoContainer>
         {
-          type==="modal"?<ModalToastr/>:<BasicToastr/>
+          <BasicToastr/>
         }
         <ErrorModal errorMsg={errorMsg} setErrorMsg={setErrorMsg}/>
         <Title>{product.title}</Title>

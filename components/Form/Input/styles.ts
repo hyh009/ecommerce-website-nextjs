@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface ContainerProps {
   border?: string;
+  borderBottom?:string;
 }
 
 interface IconContainerProps {
@@ -13,6 +14,7 @@ interface LabelProps {
 }
 
 export const InputContainer = styled.div<ContainerProps>`
+    border-bottom:${props=>props.borderBottom};
     border: ${props=>props.border};
     display:flex;
     width:100%;
@@ -43,7 +45,6 @@ export const IconContainer = styled.div<IconContainerProps>`
   color:${props=>props.color}
 `;
 
-
 export const TransparentInput = styled.input`
   flex:1;
   width:max(100%);
@@ -55,6 +56,10 @@ export const TransparentInput = styled.input`
 
   &:focus{
     outline: none;
+  }
+
+  &:disabled{
+    color:black;
   }
 
 `;

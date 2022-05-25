@@ -6,7 +6,7 @@ import { Container, UserContainer } from './styles'
 import {Navbar, Newsletter, Footer, Announcement, ScrollToTop, ProfileSidebar} from "../index";
 import Error from "next/error";
 import CartContext from '../../../store/cart-context';
-import { Session } from 'next-auth';
+import { IUserDocument } from '../../../models/User';
 
 
 
@@ -61,26 +61,21 @@ export const MainLayout:React.FC<Props> = ({children, setIsLoadingSession, error
 };
 
 interface UserProps {
+  user:IUserDocument;
   children : ReactNode;
   errorCode?:number;
 }
 
-export const UserLayout:React.FC<UserProps> = ({children, errorCode}) => {
+export const UserLayout:React.FC<UserProps> = ({children, user, errorCode}) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [session, setSession] = useState<Session|null>(null);
-  const cartCtx = useContext(CartContext);
-  const router = useRouter();
+  const {quantity, getCart} = useContext(CartContext);
 
   useEffect(()=>{
-    getSession().then((session)=>{
-      if(!session){
-        router.push("/login");
-      }else{
-        setSession(session);
-        setLoading(false);
-      }
-    })
-  },[router]);
+    if(user?._id){
+      getCart(user._id);
+      setLoading(false);
+    }
+  },[user, getCart]);
 
 
   if(loading){
@@ -93,9 +88,9 @@ export const UserLayout:React.FC<UserProps> = ({children, errorCode}) => {
 
   return (
     <Container id="backdrop">
-      <Navbar position="static" cartNumber={cartCtx.quantity}/>
+      <Navbar position="static" cartNumber={quantity}/>
         <UserContainer>
-          <ProfileSidebar session={session}/>
+          <ProfileSidebar user={user}/>
           {children}
         </UserContainer>
       <Footer background="#f0eeee"/>

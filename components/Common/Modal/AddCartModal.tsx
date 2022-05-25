@@ -16,7 +16,7 @@ const AddCartModal:React.FC<Props> = ({dialogRef, showCloseIcon, closeDialog, pr
   return (
     <AddCartContainer ref={dialogRef}>
       {showCloseIcon && <CloseIcon onClick={closeDialog}/>}
-      <ProductInfo product={product} type="modal"/>
+      <ProductInfo product={product} type="modal" closeDialog={closeDialog}/>
     </AddCartContainer>
   )
 }

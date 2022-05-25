@@ -12,6 +12,7 @@ interface ButtonProps {
     isDisable?:boolean;
     clickHandler?:()=>void;
     border?:string;
+    borderRadius?:string;
     width?:string;
     space?:"compact"|"standard"|"comfortable";
     fontSize?:string;
@@ -21,12 +22,13 @@ interface ButtonProps {
 }
 
 
-export const Button:React.FC<ButtonProps> = ({type, content, Icon, loading, clickHandler, isDisable, border, width, fontSize, space, backgroundColor, color, alignSelf})=>{
+export const Button:React.FC<ButtonProps> = ({type, content, Icon, loading, clickHandler, isDisable, border, borderRadius, width, fontSize, space, backgroundColor, color, alignSelf})=>{
     return (
         <ResponsiveButton type={type} 
                           disabled={isDisable}
                           onClick={clickHandler && clickHandler}
                           border={border?border as string:undefined}
+                          borderRadius={borderRadius?borderRadius as string:undefined}
                           space={space?space :undefined}
                           fontSize={fontSize? fontSize : undefined}
                           backgroundColor={backgroundColor?backgroundColor as string :undefined}
@@ -43,12 +45,13 @@ export const Button:React.FC<ButtonProps> = ({type, content, Icon, loading, clic
   }
 
 
-export const FixedWidthButton:React.FC<ButtonProps> = ({type, content, Icon, loading, clickHandler, isDisable, border, width, fontSize, space, backgroundColor, color, alignSelf}) =>{
+export const FixedWidthButton:React.FC<ButtonProps> = ({type, content, Icon, loading, clickHandler, isDisable, border, borderRadius, width, fontSize, space, backgroundColor, color, alignSelf}) =>{
     return  (
         <BasicButton type={type} 
                      disabled={isDisable}
                      onClick={clickHandler && clickHandler}
                      border={border?border as string:undefined}
+                     borderRadius={borderRadius?borderRadius as string:undefined}
                      space={space?space :undefined}
                      fontSize={fontSize? fontSize : undefined}
                      backgroundColor={backgroundColor?backgroundColor as string :undefined}
